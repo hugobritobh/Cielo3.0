@@ -13,6 +13,8 @@
     * [x] Com autorização a partir da primeira recorrência.
 * [x] Pagamentos por cartão de débito.
 * [x] Geração de token para o cartão para armazenamento seguro
+* [x] Boleto
+* [x] Transferência Eletrônica
 * [x] Cancelamento de autorização.
 * [x] Consulta de pagamentos.
 
