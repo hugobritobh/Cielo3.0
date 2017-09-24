@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Dto\**" />
+    <EmbeddedResource Remove="Dto\**" />
+    <None Remove="Dto\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cielo.Models\Cielo.Models.csproj" />
+  </ItemGroup>
+
+</Project>
