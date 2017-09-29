@@ -38,12 +38,18 @@ Você pode utilizar qualquer provider JSON. Para isso implemente a interface ISe
              return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(json);
         }
     }
-
 ## Transformando Async para Sync
   Coloque no final da função o Result. Por exemplo:
     
     api.CreateTransaction(Guid.NewGuid(), transaction).Result;
+    
+## Adicione a sua chave da Cielo para teste
+      public class Merchant
+      {
+              public static readonly Merchant SANDBOX = 
+                     new Merchant(Guid.Parse("00000000-0000-0000-0000-000000000000"), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
+      }
 ## Documentação da Cielo
 * [Visão Geral](http://developercielo.github.io/Webservice-3.0/#visão-geral---api-cielo-ecommerce)
 
