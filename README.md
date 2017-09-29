@@ -44,7 +44,7 @@ Você pode utilizar qualquer provider JSON. Para isso implemente a interface ISe
     api.CreateTransaction(Guid.NewGuid(), transaction).Result;
     
 ## Adicione a sua chave da Cielo para teste
-Caso queira executar o teste unitário pode deixar a chave minha do Sandbox, caso queira utilizar a sua altere a classe:
+Caso queira executar o teste unitário pode deixar a chave minha do Sandbox, se deseja utilizar a sua chave altere a classe:
 
       public class Merchant
       {
