@@ -52,6 +52,10 @@ Caso queira executar o teste unitário pode deixar a minha chave do Sandbox, se 
                      new Merchant(Guid.Parse("00000000-0000-0000-0000-000000000000"), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
       }
+     
+## Nuget
+Install-Package CieloRest -Version 1.0.0
+      
 ## Documentação da Cielo
 * [Visão Geral](http://developercielo.github.io/Webservice-3.0/#visão-geral---api-cielo-ecommerce)
 
