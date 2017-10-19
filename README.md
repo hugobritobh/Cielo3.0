@@ -42,6 +42,8 @@ Você pode utilizar qualquer provider JSON. Para isso implemente a interface ISe
   Coloque no final da função o Result. Por exemplo:
     
     api.CreateTransaction(Guid.NewGuid(), transaction).Result;
+    ou
+    Task.Run(() => api.CreateTransaction(Guid.NewGuid(), transaction)).Result;
     
 ## Chave do Sandbox
 Caso queira executar o teste unitário pode deixar a minha chave do Sandbox, se deseja utilizar a sua altere a classe:
