@@ -9,7 +9,11 @@
         private readonly string _transactionUrl;
         private readonly string _queryUrl;
 
-        public CieloEnvironment(string transactionUrl, string queryUrl) => (_transactionUrl, _queryUrl) = (transactionUrl, queryUrl);
+        public CieloEnvironment(string transactionUrl, string queryUrl)
+        {
+            _transactionUrl = transactionUrl;
+            _queryUrl = queryUrl;
+        }
 
         public string GetTransactionUrl(string path) => _transactionUrl + path;
 

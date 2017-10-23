@@ -166,7 +166,7 @@ namespace Cielo
                 throw new CieloException($"Error code {response.StatusCode}.", response.Content.ReadAsStringAsync().Result, this.SerializerJSON);
             }
         }
-        
+
         /// <summary>
         /// Envia uma transação
         /// </summary>
@@ -181,8 +181,13 @@ namespace Cielo
             return GetResponse<Transaction>(response);
         }
 
+        public async Task<Transaction> GetTransaction(Guid paymentId)
+        {
+            return await GetTransaction(Guid.NewGuid(), paymentId);
+        }
+
         /// <summary>
-        /// Busca uma transação
+        /// Consulta uma transação
         /// </summary>
         /// <param name="requestId"></param>
         /// <param name="paymentId"></param>

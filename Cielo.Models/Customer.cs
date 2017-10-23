@@ -2,12 +2,11 @@
 
 namespace Cielo
 {
+    /// <summary>
+    /// Holder
+    /// </summary>
     public class Customer
     {
-        public Customer()
-        {
-        }
-
         public Customer(string name)
         {
             this.Name = name;
@@ -24,6 +23,16 @@ namespace Cielo
             IdentityType = value.ToString();
         }
 
+        public void SetBirthdate(DateTime value)
+        {
+            Birthdate = value.ToString("yyyy-MM-dd");
+        }
+
+        public void SetBirthdate(int year, int month, int day)
+        {
+            SetBirthdate(new DateTime(year, month, day));
+        }
+
         public IdentityType GetIdentityType()
         {
             Enum.TryParse<IdentityType>(IdentityType, out IdentityType value);
@@ -31,7 +40,10 @@ namespace Cielo
         }
 
         public string Email { get; set; }
-        public DateTime? Birthdate { get; set; }
+        /// <summary>
+        /// yyyy-MM-dd
+        /// </summary>
+        public string Birthdate { get; set; }
         public Address Address { get; set; }
         public Address DeliveryAddress { get; set; }
     }

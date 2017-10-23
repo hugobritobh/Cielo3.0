@@ -26,7 +26,8 @@ namespace Cielo
         /// <param name="nossoNumero">Quando for boleto</param>
         /// <param name="instrucao"></param>
         /// <param name="country"></param>
-        public Payment(decimal amount, PaymentType paymentType, Provider provider, string nossoNumero = "", string instrucao = "", string transferReturnUrl = "", Currency currency = Cielo.Currency.BRL, string country = Cielo.Country.BRA)
+        /// <param name="returnUrl">obrigatório quando é cartão de débito e transferência eletronica</param>
+        public Payment(decimal amount, PaymentType paymentType, Provider provider, string nossoNumero = "", string instrucao = "", string returnUrl = "", Currency currency = Cielo.Currency.BRL, string country = Cielo.Country.BRA)
         {
             SetPaymentType(paymentType);
             SetAmount(amount);
@@ -34,7 +35,7 @@ namespace Cielo
             SetProvider(provider);
             BoletoNumber = nossoNumero;
             Instructions = instrucao;
-            ReturnUrl = transferReturnUrl;
+            this.ReturnUrl = returnUrl;
             this.SoftDescriptor = softDescriptor;
             this.Country = country;
         }
@@ -50,7 +51,8 @@ namespace Cielo
         /// <param name="creditCard"></param>
         /// <param name="paymentType">Tipo do pagamento (Cartão, Boleto, Transferência)</param>
         /// <param name="country"></param>
-        public Payment(decimal amount, Currency currency, int installments, bool capture, string softDescriptor, CreditCard creditCard, PaymentType paymentType = PaymentType.CreditCard, string country = Cielo.Country.BRA)
+        /// <param name="returnUrl">obrigatório quando é cartão de débito e transferência eletronica</param>
+        public Payment(decimal amount, Currency currency, int installments, bool capture, string softDescriptor, Card card, PaymentType paymentType = PaymentType.CreditCard, string country = Cielo.Country.BRA, string returnUrl = "", RecurrentPayment recurrentPayment = null, Wallet wallet = null)
         {
             SetPaymentType(paymentType);
             SetAmount(amount);
@@ -58,8 +60,24 @@ namespace Cielo
             this.Installments = installments;
             this.Capture = capture;
             this.SoftDescriptor = softDescriptor;
-            this.CreditCard = creditCard;
+
+            SetCard(card, paymentType);
+
             this.Country = country;
+            this.ReturnUrl = returnUrl;
+            this.Wallet = wallet;
+        }
+
+        private void SetCard(Card card, PaymentType paymentType)
+        {
+            if (paymentType == PaymentType.CreditCard)
+            {
+                this.CreditCard = card;
+            }
+            else if (paymentType == PaymentType.DebitCard)
+            {
+                this.DebitCard = card;
+            }
         }
 
         /// <summary>
@@ -69,19 +87,21 @@ namespace Cielo
         /// <param name="currency"></param>
         /// <param name="installments">Numero de Parcelas</param>
         /// <param name="softDescriptor"></param>
-        /// <param name="creditCard"></param>
+        /// <param name="card"></param>
         /// <param name="recurrentPayment"></param>
         /// <param name="country"></param>
-        public Payment(decimal amount, Currency currency, int installments, string softDescriptor, CreditCard creditCard, RecurrentPayment recurrentPayment, string country = Cielo.Country.BRA)
+        public Payment(decimal amount, Currency currency, int installments, string softDescriptor, Card card, RecurrentPayment recurrentPayment, string country = Cielo.Country.BRA)
         {
             SetPaymentType(PaymentType.CreditCard);
             SetAmount(amount);
             SetCurrency(currency);
+            SetCard(card, PaymentType.CreditCard);
+
             this.Installments = installments;
             this.SoftDescriptor = softDescriptor;
-            this.CreditCard = creditCard;
             this.RecurrentPayment = recurrentPayment;
             this.Country = country;
+
         }
 
         public int? Installments { get; set; }
@@ -101,13 +121,19 @@ namespace Cielo
         }
 
         public bool? Capture { get; set; }
+        /// <summary>
+        /// Define se o comprador será direcionado ao Banco emissor para autenticação do cartão.
+        /// False por padrão. 
+        /// </summary>
         public bool? Authenticate { get; set; }
         public bool? Recurrent { get; set; }
         public RecurrentPayment RecurrentPayment { get; set; }
-        public CreditCard CreditCard { get; set; }
+        public Card CreditCard { get; set; }
         public string Tid { get; set; }
         public string ProofOfSale { get; set; }
         public string AuthorizationCode { get; set; }
+
+        public string AuthenticationUrl { get; set; }
         public string BoletoNumber { get; private set; }
         public string Instructions { get; private set; }
         public string Country { get; set; }
@@ -139,7 +165,12 @@ namespace Cielo
         }
         public string ReturnUrl { get; set; }
 
-       // [JsonConverter(typeof(StringEnumConverter))]
+        /// <summary>
+        /// Carteira utilizada no cartão de débito
+        /// </summary>
+        public Wallet Wallet { get; set; }
+
+        // [JsonConverter(typeof(StringEnumConverter))]
         public string Provider { get; set; }
 
         public void SetProvider(Provider value)
@@ -155,7 +186,7 @@ namespace Cielo
 
         public Guid? PaymentId { get; set; }
 
-       // [JsonConverter(typeof(StringEnumConverter))]
+        // [JsonConverter(typeof(StringEnumConverter))]
         public string Type { get; set; }
 
         public void SetPaymentType(PaymentType value)
@@ -220,8 +251,11 @@ namespace Cielo
         public DateTime? ReceivedDate { get; set; }
         public DateTime? CapturedDate { get; set; }
 
+        public FraudAnalysis FraudAnalysis { get; set; }
+
         //[JsonConverter(typeof(StringEnumConverter))]
         public string Currency { get; set; }
+        public Card DebitCard { get; set; }
 
         public void SetCurrency(Currency value)
         {

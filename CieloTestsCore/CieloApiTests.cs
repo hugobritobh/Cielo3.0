@@ -30,14 +30,18 @@ namespace Cielo.Tests
         }
 
         [TestMethod()]
-        public void Autorizacao()
+        public void AutorizacaoCredito()
         {
             decimal value = 150.01M;
             CardBrand brand = CardBrand.Visa;
 
-            var customer = new Customer(name: _nome);
+            var customer = new Customer(_nomeCartao);
+            customer.SetIdentityType(IdentityType.CPF);
+            customer.Identity = "14258222402"; //numero gerado aleatoriamente
+            customer.SetBirthdate(1990, 2, 1);
+            customer.Email = "teste@gmail.com";
 
-            var creditCard = new CreditCard(
+            var creditCard = new Card(
                 cardNumber: SandboxCreditCard.Authorized1,
                 holder: _nomeCartao,
                 expirationDate: _validDate,
@@ -50,7 +54,52 @@ namespace Cielo.Tests
                 installments: 1,
                 capture: false,
                 softDescriptor: _descricao,
-                creditCard: creditCard);
+                card: creditCard,
+                returnUrl: "http://www.cielo.com.br");
+            
+            /* store order number */
+            var merchantOrderId = new Random().Next();
+
+            var transaction = new Transaction(
+                merchantOrderId: merchantOrderId.ToString(),
+                customer: customer,
+                payment: payment);
+
+            var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
+
+            //Consultando
+            var result = _api.GetTransaction(returnTransaction.Payment.PaymentId.Value).Result;
+
+            Assert.IsTrue(result.Payment.CreditCard.GetBrand() == brand, "Erro na bandeira do cartão");
+            Assert.IsTrue(result.Payment.CreditCard.ExpirationDate == _validDate.ToString("MM/yyyy"), "Erro na data de vencimento do cartão");
+            Assert.IsTrue(result.Payment.GetAmount() == value, "Erro no valor da fatura");
+            Assert.IsTrue(result.Payment.GetStatus() == Status.Authorized, "Transação não foi autorizada");
+        }
+
+        [TestMethod()]
+        public void AutorizacaoDebito()
+        {
+            decimal value = 178.91M;
+            CardBrand brand = CardBrand.Master;
+
+            var customer = new Customer(name: _nome);
+
+            var card = new Card(
+                cardNumber: SandboxCreditCard.Authorized1,
+                holder: _nomeCartao,
+                expirationDate: _validDate,
+                securityCode: "123",
+                brand: brand);
+
+            var payment = new Payment(
+                amount: value,
+                currency: Currency.BRL,
+                paymentType: PaymentType.DebitCard,
+                installments: 1,
+                capture: true,
+                softDescriptor: _descricao,
+                card: card,
+                returnUrl: "http://www.cielo.com.br");
 
             /* store order number */
             var merchantOrderId = new Random().Next();
@@ -62,11 +111,16 @@ namespace Cielo.Tests
 
             var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
 
+            //Consultando
+            var result = _api.GetTransaction(returnTransaction.Payment.PaymentId.Value).Result;
 
-            Assert.IsTrue(returnTransaction.Payment.CreditCard.GetBrand() == brand, "Erro na bandeira do cartão");
-            Assert.IsTrue(returnTransaction.Payment.CreditCard.ExpirationDate == _validDate.ToString("MM/yyyy"), "Erro na data de vencimento do cartão");
-            Assert.IsTrue(returnTransaction.Payment.GetAmount() == value, "Erro no valor da fatura");
-            Assert.IsTrue(returnTransaction.Payment.GetStatus() == Status.Authorized, "Transação não foi autorizada");
+            Assert.IsTrue(result.Payment.DebitCard.GetBrand() == brand, "Erro na bandeira do cartão");
+            Assert.IsTrue(result.Payment.DebitCard.ExpirationDate == _validDate.ToString("MM/yyyy"), "Erro na data de vencimento do cartão");
+            Assert.IsTrue(result.Payment.GetAmount() == value, "Erro no valor da fatura");
+            Assert.IsTrue(!string.IsNullOrEmpty(result.Payment.Links[0].Href), "Link para o redirecionamento não retornado");
+            
+            //No caso primeiro tem q ser redirecionado para depois consultar
+            Assert.IsTrue(!String.IsNullOrEmpty(returnTransaction.Payment.AuthenticationUrl), "AuthenticationUrl não foi retornada");
         }
 
         [TestMethod()]
@@ -74,7 +128,7 @@ namespace Cielo.Tests
         {
             var customer = new Customer(name: _nome);
 
-            var creditCard = new CreditCard(
+            var creditCard = new Card(
                 cardNumber: SandboxCreditCard.Authorized1,
                 holder: _nomeCartao,
                 expirationDate: _validDate,
@@ -87,7 +141,7 @@ namespace Cielo.Tests
                 installments: 1,
                 capture: true,
                 softDescriptor: _descricao,
-                creditCard: creditCard);
+                card: creditCard);
 
             /* store order number */
             var merchantOrderId = new Random().Next();
@@ -107,7 +161,7 @@ namespace Cielo.Tests
         {
             var customer = new Customer(name: _nome);
 
-            var creditCard = new CreditCard(
+            var creditCard = new Card(
                 cardNumber: SandboxCreditCard.NotAuthorized,
                 holder: _nomeCartao,
                 expirationDate: _validDate,
@@ -120,7 +174,7 @@ namespace Cielo.Tests
                 installments: 1,
                 capture: true,
                 softDescriptor: _descricao,
-                creditCard: creditCard);
+                card: creditCard);
 
             /* store order number */
             var merchantOrderId = new Random().Next();
@@ -140,7 +194,7 @@ namespace Cielo.Tests
         {
             var customer = new Customer(name: _nome);
 
-            var creditCard = new CreditCard(
+            var creditCard = new Card(
                 cardNumber: SandboxCreditCard.NotAuthorizedCardBlocked,
                 holder: _nomeCartao,
                 expirationDate: _validDate,
@@ -153,7 +207,7 @@ namespace Cielo.Tests
                 installments: 1,
                 capture: true,
                 softDescriptor: _descricao,
-                creditCard: creditCard);
+                card: creditCard);
 
             /* store order number */
             var merchantOrderId = new Random().Next();
@@ -173,7 +227,7 @@ namespace Cielo.Tests
         {
             var customer = new Customer(name: _nome);
 
-            var creditCard = new CreditCard(
+            var creditCard = new Card(
                 cardNumber: SandboxCreditCard.NotAuthorizedCardCanceled,
                 holder: _nomeCartao,
                 expirationDate: _validDate,
@@ -186,7 +240,7 @@ namespace Cielo.Tests
                 installments: 1,
                 capture: true,
                 softDescriptor: _descricao,
-                creditCard: creditCard);
+                card: creditCard);
 
             /* store order number */
             var merchantOrderId = new Random().Next();
@@ -206,7 +260,7 @@ namespace Cielo.Tests
         {
             var customer = new Customer(name: _nome);
 
-            var creditCard = new CreditCard(
+            var creditCard = new Card(
                 cardNumber: SandboxCreditCard.NotAuthorizedCardExpired,
                 holder: _nomeCartao,
                 expirationDate: _invalidDate,
@@ -219,7 +273,7 @@ namespace Cielo.Tests
                 installments: 1,
                 capture: true,
                 softDescriptor: _descricao,
-                creditCard: creditCard);
+                card: creditCard);
 
             /* store order number */
             var merchantOrderId = new Random().Next();
@@ -256,7 +310,7 @@ namespace Cielo.Tests
         {
             var customer = new Customer(name: _nome);
 
-            var creditCard = new CreditCard(
+            var creditCard = new Card(
                 cardNumber: SandboxCreditCard.NotAuthorizedCardProblems,
                 holder: _nomeCartao,
                 expirationDate: _validDate,
@@ -269,7 +323,7 @@ namespace Cielo.Tests
                 installments: 1,
                 capture: true,
                 softDescriptor: _descricao,
-                creditCard: creditCard);
+                card: creditCard);
 
             /* store order number */
             var merchantOrderId = new Random().Next();
@@ -281,6 +335,9 @@ namespace Cielo.Tests
 
             var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
 
+            //Consultando
+            var result = _api.GetTransaction(returnTransaction.Payment.PaymentId.Value).Result;
+
             Assert.IsTrue(returnTransaction.Payment.GetStatus() == Status.Denied, "Transação não foi negada");
         }
 
@@ -289,7 +346,7 @@ namespace Cielo.Tests
         {
             var customer = new Customer(name: _nome);
 
-            var creditCard = new CreditCard(
+            var creditCard = new Card(
                 cardNumber: SandboxCreditCard.NotAuthorizedTimeOut,
                 holder: _nomeCartao,
                 expirationDate: _validDate,
@@ -302,7 +359,7 @@ namespace Cielo.Tests
                 installments: 1,
                 capture: true,
                 softDescriptor: _descricao,
-                creditCard: creditCard);
+                card: creditCard);
 
             /* store order number */
             var merchantOrderId = new Random().Next();
@@ -322,7 +379,7 @@ namespace Cielo.Tests
         {
             var customer = new Customer(name: _nome);
 
-            var creditCard = new CreditCard(
+            var creditCard = new Card(
                 cardNumber: SandboxCreditCard.Authorized1,
                 holder: _nomeCartao,
                 expirationDate: _validDate,
@@ -335,7 +392,7 @@ namespace Cielo.Tests
                 installments: 1,
                 capture: false,
                 softDescriptor: _descricao,
-                creditCard: creditCard);
+                card: creditCard);
 
             /* store order number */
             var merchantOrderId = new Random().Next();
@@ -356,7 +413,7 @@ namespace Cielo.Tests
         {
             var customer = new Customer(name: _nome);
 
-            var creditCard = new CreditCard(
+            var creditCard = new Card(
                 cardNumber: SandboxCreditCard.Authorized1,
                 holder: _nomeCartao,
                 expirationDate: _validDate,
@@ -369,7 +426,7 @@ namespace Cielo.Tests
                 installments: 1,
                 capture: false,
                 softDescriptor: _descricao,
-                creditCard: creditCard);
+                card: creditCard);
 
             /* store order number */
             var merchantOrderId = new Random().Next();
@@ -391,7 +448,7 @@ namespace Cielo.Tests
         {
             var customer = new Customer(name: _nome);
 
-            var creditCard = new CreditCard(
+            var creditCard = new Card(
                 cardNumber: SandboxCreditCard.Authorized1,
                 holder: _nomeCartao,
                 expirationDate: _validDate,
@@ -404,7 +461,7 @@ namespace Cielo.Tests
                 installments: 1,
                 capture: false,
                 softDescriptor: _descricao,
-                creditCard: creditCard);
+                card: creditCard);
 
             /* store order number */
             var merchantOrderId = new Random().Next();
@@ -425,7 +482,7 @@ namespace Cielo.Tests
         {
             var customer = new Customer(name: _nome);
 
-            var creditCard = new CreditCard(
+            var creditCard = new Card(
                 cardNumber: SandboxCreditCard.Authorized2,
                 holder: _nomeCartao,
                 expirationDate: _validDate,
@@ -439,7 +496,7 @@ namespace Cielo.Tests
                 installments: 1,
                 capture: false,
                 softDescriptor: _descricao,
-                creditCard: creditCard);
+                card: creditCard);
 
             /* store order number */
             var merchantOrderId = new Random().Next();
@@ -459,7 +516,7 @@ namespace Cielo.Tests
         {
             var customer = new Customer(name: _nome);
 
-            var creditCard = new CreditCard(
+            var creditCard = new Card(
                 cardNumber: SandboxCreditCard.Authorized2,
                 holder: _nomeCartao,
                 expirationDate: _validDate,
@@ -473,7 +530,7 @@ namespace Cielo.Tests
                 installments: 1,
                 capture: true,
                 softDescriptor: _descricao,
-                creditCard: creditCard);
+                card: creditCard);
 
             /* store order number */
             var merchantOrderId = new Random().Next();
@@ -493,7 +550,7 @@ namespace Cielo.Tests
         {
             var customer = new Customer(name: _nome);
 
-            var creditCard = new CreditCard(
+            var creditCard = new Card(
                 cardNumber: SandboxCreditCard.Authorized2,
                 holder: _nomeCartao,
                 expirationDate: _validDate,
@@ -511,7 +568,7 @@ namespace Cielo.Tests
                 currency: Currency.BRL,
                 installments: 1,
                 softDescriptor: _descricao,
-                creditCard: creditCard,
+                card: creditCard,
                 recurrentPayment: recurrentPayment);
 
             /* store order number */
@@ -533,7 +590,7 @@ namespace Cielo.Tests
         {
             var customer = new Customer(name: _nome);
 
-            var creditCard = new CreditCard(
+            var creditCard = new Card(
                 cardNumber: SandboxCreditCard.Authorized2,
                 holder: _nomeCartao,
                 expirationDate: _validDate,
@@ -550,7 +607,7 @@ namespace Cielo.Tests
                 currency: Currency.BRL,
                 installments: 1,
                 softDescriptor: _descricao,
-                creditCard: creditCard,
+                card: creditCard,
                 recurrentPayment: recurrentPayment);
 
             /* store order number */
@@ -564,6 +621,7 @@ namespace Cielo.Tests
             var result = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
 
             Assert.IsTrue(result.Payment.GetStatus() == Status.Authorized, "Recorrência não foi autorizada");
+            Assert.IsTrue(result.Payment.RecurrentPayment.RecurrentPaymentId.HasValue, "Não foi gerado o RecurrentPaymentId");
         }
 
         [TestMethod()]
@@ -571,7 +629,7 @@ namespace Cielo.Tests
         {
             var customer = new Customer(name: _nome);
 
-            var creditCard = new CreditCard(
+            var creditCard = new Card(
                 cardNumber: SandboxCreditCard.Authorized2,
                 holder: _nomeCartao,
                 expirationDate: _validDate,
@@ -589,7 +647,7 @@ namespace Cielo.Tests
                 currency: Currency.BRL,
                 installments: 1,
                 softDescriptor: _descricao,
-                creditCard: creditCard,
+                card: creditCard,
                 recurrentPayment: recurrentPayment);
 
             /* store order number */
@@ -613,7 +671,7 @@ namespace Cielo.Tests
         {
             var customer = new Customer(name: _nome);
 
-            var creditCard = new CreditCard(
+            var creditCard = new Card(
                 cardNumber: SandboxCreditCard.Authorized2,
                 holder: _nomeCartao,
                 expirationDate: _validDate,
@@ -631,7 +689,7 @@ namespace Cielo.Tests
                 currency: Currency.BRL,
                 installments: 1,
                 softDescriptor: _descricao,
-                creditCard: creditCard,
+                card: creditCard,
                 recurrentPayment: recurrentPayment);
 
             /* store order number */
@@ -713,11 +771,11 @@ namespace Cielo.Tests
             decimal value = 162.55M;
 
             var customer = new Customer(name: _nome);
- 
+
             var payment = new Payment(value,
                                       PaymentType.EletronicTransfer,
                                       Provider.Simulado,
-                                      transferReturnUrl: "www.cielo.com.br");
+                                      returnUrl: "www.cielo.com.br");
 
             /* store order number */
             var merchantOrderId = new Random().Next();
