@@ -18,6 +18,9 @@
 * [x] Cancelamento de autorização.
 * [x] Consulta de pagamentos.
 
+## Como utilizar
+Como não tem uma documentação formal utilize o projeto de Teste (CieloTestsCore) para ver os exemplos criados (e verificar se ainda estão funcionando).
+
 ## Implemente seu provider JSON
 Você pode utilizar qualquer provider JSON. Para isso implemente a interface ISerializerJSON. Exemplo utilizando Newtonsoft:
 
