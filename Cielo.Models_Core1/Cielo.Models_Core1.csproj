@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <Version>1.0.4</Version>
+    <PackageId>CieloRest</PackageId>
+    <Authors>Hugo de Brito Valadares Rodrigues Alves</Authors>
+    <Company>Hugo de Brito Valadares Rodrigues Alves</Company>
+    <Product>Cielo</Product>
+    <Description>Integração com a API da Cielo 3.0</Description>
+    <PackageProjectUrl>https://github.com/hugobritobh/Cielo3.0</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Cielo.Models\Address.cs" Link="Address.cs" />
+    <Compile Include="..\Cielo.Models\Card.cs" Link="Card.cs" />
+    <Compile Include="..\Cielo.Models\Customer.cs" Link="Customer.cs" />
+    <Compile Include="..\Cielo.Models\Enums.cs" Link="Enums.cs" />
+    <Compile Include="..\Cielo.Models\Error.cs" Link="Error.cs" />
+    <Compile Include="..\Cielo.Models\FraudAnalysis.cs" Link="FraudAnalysis.cs" />
+    <Compile Include="..\Cielo.Models\Link.cs" Link="Link.cs" />
+    <Compile Include="..\Cielo.Models\NumberHelper.cs" Link="NumberHelper.cs" />
+    <Compile Include="..\Cielo.Models\Payment.cs" Link="Payment.cs" />
+    <Compile Include="..\Cielo.Models\RecurrentPayment.cs" Link="RecurrentPayment.cs" />
+    <Compile Include="..\Cielo.Models\ReturnStatus.cs" Link="ReturnStatus.cs" />
+    <Compile Include="..\Cielo.Models\Transaction.cs" Link="Transaction.cs" />
+    <Compile Include="..\Cielo.Models\Wallet.cs" Link="Wallet.cs" />
+  </ItemGroup>
+
+</Project>

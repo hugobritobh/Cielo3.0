@@ -600,7 +600,8 @@ namespace Cielo.Tests
 
             var recurrentPayment = new RecurrentPayment(
                 interval: Interval.Monthly,
-                endDate: DateTime.Now.AddMonths(6));
+                // endDate: DateTime.Now.AddMonths(6));
+                endDate: DateTime.Now.AddYears(20));
 
             var payment = new Payment(
                 amount: 150.02M,

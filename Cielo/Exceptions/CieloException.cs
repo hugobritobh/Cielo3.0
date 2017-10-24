@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Cielo
 {
-    public class CieloException : ApplicationException
+    public class CieloException : Exception
     {
         private readonly string _json = string.Empty;
         private readonly ISerializerJSON _serializer;

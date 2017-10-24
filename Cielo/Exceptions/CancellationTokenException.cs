@@ -2,7 +2,7 @@
 
 namespace Cielo
 {
-    public class CancellationTokenException : ApplicationException
+    public class CancellationTokenException : Exception
     {
         private const string _msg = "Timeout out.";
 

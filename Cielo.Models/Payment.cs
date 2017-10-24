@@ -60,6 +60,7 @@ namespace Cielo
             this.Installments = installments;
             this.Capture = capture;
             this.SoftDescriptor = softDescriptor;
+            this.RecurrentPayment = recurrentPayment;
 
             SetCard(card, paymentType);
 
