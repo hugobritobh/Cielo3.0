@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{087D8081-F316-4780-A168-18038CBB2479}</ProjectGuid>
+    <ProjectGuid>{8C5A1400-FBD1-4B34-9956-3BFCC97B591F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Cielo</RootNamespace>
-    <AssemblyName>Cielo</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <RootNamespace>Cielo.Models</RootNamespace>
+    <AssemblyName>Cielo.Models</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -33,37 +33,48 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Cielo\CieloApi.cs">
-      <Link>CieloApi.cs</Link>
+    <Compile Include="..\Cielo.Models\Address.cs">
+      <Link>Address.cs</Link>
     </Compile>
-    <Compile Include="..\Cielo\CieloEnvironment.cs">
-      <Link>CieloEnvironment.cs</Link>
+    <Compile Include="..\Cielo.Models\Card.cs">
+      <Link>Card.cs</Link>
     </Compile>
-    <Compile Include="..\Cielo\Exceptions\CancellationTokenException.cs">
-      <Link>Exceptions\CancellationTokenException.cs</Link>
+    <Compile Include="..\Cielo.Models\Customer.cs">
+      <Link>Customer.cs</Link>
     </Compile>
-    <Compile Include="..\Cielo\Exceptions\CieloException.cs">
-      <Link>Exceptions\CieloException.cs</Link>
+    <Compile Include="..\Cielo.Models\Enums.cs">
+      <Link>Enums.cs</Link>
     </Compile>
-    <Compile Include="..\Cielo\ISerializerJSON.cs">
-      <Link>ISerializerJSON.cs</Link>
+    <Compile Include="..\Cielo.Models\Error.cs">
+      <Link>Error.cs</Link>
     </Compile>
-    <Compile Include="..\Cielo\Merchant.cs">
-      <Link>Merchant.cs</Link>
+    <Compile Include="..\Cielo.Models\FraudAnalysis.cs">
+      <Link>FraudAnalysis.cs</Link>
     </Compile>
-    <Compile Include="..\Cielo\SandboxCreditCard.cs">
-      <Link>SandboxCreditCard.cs</Link>
+    <Compile Include="..\Cielo.Models\Link.cs">
+      <Link>Link.cs</Link>
+    </Compile>
+    <Compile Include="..\Cielo.Models\NumberHelper.cs">
+      <Link>NumberHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Cielo.Models\Payment.cs">
+      <Link>Payment.cs</Link>
+    </Compile>
+    <Compile Include="..\Cielo.Models\RecurrentPayment.cs">
+      <Link>RecurrentPayment.cs</Link>
+    </Compile>
+    <Compile Include="..\Cielo.Models\ReturnStatus.cs">
+      <Link>ReturnStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\Cielo.Models\Transaction.cs">
+      <Link>Transaction.cs</Link>
+    </Compile>
+    <Compile Include="..\Cielo.Models\Wallet.cs">
+      <Link>Wallet.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Cielo.Models_461\Cielo.Models_461.csproj">
-      <Project>{8484ea1f-a623-493b-8da5-8126e291b8ea}</Project>
-      <Name>Cielo.Models_461</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

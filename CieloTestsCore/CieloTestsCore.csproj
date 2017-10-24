@@ -16,8 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Cielo.Models\Cielo.Models.csproj" />
-    <ProjectReference Include="..\Cielo\Cielo.csproj" />
+    <Reference Include="Cielo">
+      <HintPath>..\Cielo_45\bin\Debug\Cielo.dll</HintPath>
+    </Reference>
+    <Reference Include="Cielo.Models">
+      <HintPath>..\Cielo_45\bin\Debug\Cielo.Models.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
