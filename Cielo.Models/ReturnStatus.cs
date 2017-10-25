@@ -11,7 +11,7 @@ namespace Cielo
         public string ReasonMessage { get; set; }
         public string ProviderReturnCode { get; set; }
         public string ProviderReturnMessage { get; set; }
-        //[JsonConverter(typeof(StringEnumConverter))]
+
         public string Status { get; set; }
 
         public void SetInterval(Status value)

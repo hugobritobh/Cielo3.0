@@ -56,7 +56,7 @@ namespace Cielo.Tests
                 softDescriptor: _descricao,
                 card: creditCard,
                 returnUrl: "http://www.cielo.com.br");
-            
+
             /* store order number */
             var merchantOrderId = new Random().Next();
 
@@ -118,7 +118,7 @@ namespace Cielo.Tests
             Assert.IsTrue(result.Payment.DebitCard.ExpirationDate == _validDate.ToString("MM/yyyy"), "Erro na data de vencimento do cartão");
             Assert.IsTrue(result.Payment.GetAmount() == value, "Erro no valor da fatura");
             Assert.IsTrue(!string.IsNullOrEmpty(result.Payment.Links[0].Href), "Link para o redirecionamento não retornado");
-            
+
             //No caso primeiro tem q ser redirecionado para depois consultar
             Assert.IsTrue(!String.IsNullOrEmpty(returnTransaction.Payment.AuthenticationUrl), "AuthenticationUrl não foi retornada");
         }
@@ -581,7 +581,9 @@ namespace Cielo.Tests
 
             var result = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
 
+            var status = result.Payment.GetStatus();
             Assert.IsTrue(result.Payment.GetStatus() == Status.Scheduled, "Recorrência não foi programada");
+            Assert.IsTrue(result.Payment.RecurrentPayment.RecurrentPaymentId.HasValue, "Não foi gerado o RecurrentPaymentId");
         }
 
 
@@ -591,7 +593,7 @@ namespace Cielo.Tests
             var customer = new Customer(name: _nome);
 
             var creditCard = new Card(
-                cardNumber: SandboxCreditCard.Authorized2,
+                cardNumber: SandboxCreditCard.Authorized1,
                 holder: _nomeCartao,
                 expirationDate: _validDate,
                 securityCode: "123",
@@ -600,7 +602,6 @@ namespace Cielo.Tests
 
             var recurrentPayment = new RecurrentPayment(
                 interval: Interval.Monthly,
-                // endDate: DateTime.Now.AddMonths(6));
                 endDate: DateTime.Now.AddYears(20));
 
             var payment = new Payment(

@@ -78,6 +78,7 @@ namespace Cielo
 
         public Link Link { get; set; }
         public string ReasonCode { get; set; }
+
         public string ReasonMessage { get; set; }
     }
 }
