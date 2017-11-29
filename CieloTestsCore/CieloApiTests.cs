@@ -65,10 +65,10 @@ namespace Cielo.Tests
                 customer: customer,
                 payment: payment);
 
-            var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
+            var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction);
 
             //Consultando
-            var result = _api.GetTransaction(returnTransaction.Payment.PaymentId.Value).Result;
+            var result = _api.GetTransaction(returnTransaction.Payment.PaymentId.Value);
 
             Assert.IsTrue(result.Payment.CreditCard.GetBrand() == brand, "Erro na bandeira do cartão");
             Assert.IsTrue(result.Payment.CreditCard.ExpirationDate == _validDate.ToString("MM/yyyy"), "Erro na data de vencimento do cartão");
@@ -109,10 +109,10 @@ namespace Cielo.Tests
                 customer: customer,
                 payment: payment);
 
-            var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
+            var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction);
 
             //Consultando
-            var result = _api.GetTransaction(returnTransaction.Payment.PaymentId.Value).Result;
+            var result = _api.GetTransaction(returnTransaction.Payment.PaymentId.Value);
 
             Assert.IsTrue(result.Payment.DebitCard.GetBrand() == brand, "Erro na bandeira do cartão");
             Assert.IsTrue(result.Payment.DebitCard.ExpirationDate == _validDate.ToString("MM/yyyy"), "Erro na data de vencimento do cartão");
@@ -151,7 +151,7 @@ namespace Cielo.Tests
                 customer: customer,
                 payment: payment);
 
-            var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
+            var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction);
 
             Assert.IsTrue(returnTransaction.Payment.GetStatus() == Status.PaymentConfirmed, "Transação não teve pagamento confirmado");
         }
@@ -184,7 +184,7 @@ namespace Cielo.Tests
                 customer: customer,
                 payment: payment);
 
-            var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
+            var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction);
 
             Assert.IsTrue(returnTransaction.Payment.GetStatus() == Status.Denied, "Transação não foi negada");
         }
@@ -217,7 +217,7 @@ namespace Cielo.Tests
                 customer: customer,
                 payment: payment);
 
-            var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
+            var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction);
 
             Assert.IsTrue(returnTransaction.Payment.GetStatus() == Status.Denied, "Transação não foi negada");
         }
@@ -250,7 +250,7 @@ namespace Cielo.Tests
                 customer: customer,
                 payment: payment);
 
-            var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
+            var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction);
 
             Assert.IsTrue(returnTransaction.Payment.GetStatus() == Status.Denied, "Transação não foi negada");
         }
@@ -285,23 +285,13 @@ namespace Cielo.Tests
 
             try
             {
-                var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
+                var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction);
 
                 Assert.IsTrue(returnTransaction.Payment.GetStatus() == Status.Denied, "Transação não foi negada");
             }
-            catch (Exception e)
+            catch (CieloException ex)
             {
-                if (e.InnerException != null)
-                {
-                    if (e is CieloException ex)
-                    {
-                        Assert.IsTrue(ex.GetCieloErrors().Any(i => i.Code == 126));
-                    }
-                }
-                else
-                {
-                    throw e;
-                }
+                Assert.IsTrue(ex.GetCieloErrors().Any(i => i.Code == 126));
             }
         }
 
@@ -333,10 +323,10 @@ namespace Cielo.Tests
                 customer: customer,
                 payment: payment);
 
-            var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
+            var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction);
 
             //Consultando
-            var result = _api.GetTransaction(returnTransaction.Payment.PaymentId.Value).Result;
+            var result = _api.GetTransaction(returnTransaction.Payment.PaymentId.Value);
 
             Assert.IsTrue(returnTransaction.Payment.GetStatus() == Status.Denied, "Transação não foi negada");
         }
@@ -369,7 +359,7 @@ namespace Cielo.Tests
                 customer: customer,
                 payment: payment);
 
-            var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
+            var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction);
 
             Assert.IsTrue(returnTransaction.Payment.ReturnCode == "99", "Resultado esperado Time Out (Código 99).");
         }
@@ -402,8 +392,8 @@ namespace Cielo.Tests
                 customer: customer,
                 payment: payment);
 
-            var result = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
-            var captureTransaction = _api.CaptureTransaction(Guid.NewGuid(), result.Payment.PaymentId.Value).Result;
+            var result = _api.CreateTransaction(Guid.NewGuid(), transaction);
+            var captureTransaction = _api.CaptureTransaction(Guid.NewGuid(), result.Payment.PaymentId.Value);
 
             Assert.IsTrue(captureTransaction.GetStatus() == Status.PaymentConfirmed, "Captura não teve pagamento confirmado");
         }
@@ -436,9 +426,9 @@ namespace Cielo.Tests
                 customer: customer,
                 payment: payment);
 
-            var result = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
-            var captureTransaction = _api.CaptureTransaction(Guid.NewGuid(), result.Payment.PaymentId.Value).Result;
-            var cancelationTransaction = _api.CancelTransaction(Guid.NewGuid(), result.Payment.PaymentId.Value).Result;
+            var result = _api.CreateTransaction(Guid.NewGuid(), transaction);
+            var captureTransaction = _api.CaptureTransaction(Guid.NewGuid(), result.Payment.PaymentId.Value);
+            var cancelationTransaction = _api.CancelTransaction(Guid.NewGuid(), result.Payment.PaymentId.Value);
 
             Assert.IsTrue(cancelationTransaction.GetStatus() == Status.Voided, "Cancelamento não teve sucesso");
         }
@@ -471,8 +461,8 @@ namespace Cielo.Tests
                 customer: customer,
                 payment: payment);
 
-            var result = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
-            var captureTransaction = _api.CaptureTransaction(Guid.NewGuid(), result.Payment.PaymentId.Value, 25.00M).Result;
+            var result = _api.CreateTransaction(Guid.NewGuid(), transaction);
+            var captureTransaction = _api.CaptureTransaction(Guid.NewGuid(), result.Payment.PaymentId.Value, 25.00M);
 
             Assert.IsTrue(captureTransaction.GetStatus() == Status.PaymentConfirmed, "Transação não teve pagamento aprovado");
         }
@@ -506,7 +496,7 @@ namespace Cielo.Tests
                 customer: customer,
                 payment: payment);
 
-            var result = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
+            var result = _api.CreateTransaction(Guid.NewGuid(), transaction);
 
             Assert.IsNotNull(result.Payment.CreditCard.CardToken, "Não foi criado o token");
         }
@@ -540,7 +530,7 @@ namespace Cielo.Tests
                 customer: customer,
                 payment: payment);
 
-            var result = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
+            var result = _api.CreateTransaction(Guid.NewGuid(), transaction);
 
             Assert.IsNotNull(result.Payment.CreditCard.CardToken, "Não foi criado o token");
         }
@@ -579,7 +569,7 @@ namespace Cielo.Tests
                 customer: customer,
                 payment: payment);
 
-            var result = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
+            var result = _api.CreateTransaction(Guid.NewGuid(), transaction);
 
             var status = result.Payment.GetStatus();
             Assert.IsTrue(result.Payment.GetStatus() == Status.Scheduled, "Recorrência não foi programada");
@@ -620,7 +610,7 @@ namespace Cielo.Tests
                 customer: customer,
                 payment: payment);
 
-            var result = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
+            var result = _api.CreateTransaction(Guid.NewGuid(), transaction);
 
             Assert.IsTrue(result.Payment.GetStatus() == Status.Authorized, "Recorrência não foi autorizada");
             Assert.IsTrue(result.Payment.RecurrentPayment.RecurrentPaymentId.HasValue, "Não foi gerado o RecurrentPaymentId");
@@ -662,8 +652,8 @@ namespace Cielo.Tests
 
             //https://apisandbox.cieloecommerce.cielo.com.br/1/RecurrentPayment/{RecurrentPaymentId}/Deactivate
 
-            var result = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
-            var result2 = _api.DeactivateRecurrent(Guid.NewGuid(), result.Payment.RecurrentPayment.RecurrentPaymentId.Value).Result;
+            var result = _api.CreateTransaction(Guid.NewGuid(), transaction);
+            var result2 = _api.DeactivateRecurrent(Guid.NewGuid(), result.Payment.RecurrentPayment.RecurrentPaymentId.Value);
 
             Assert.IsTrue(result2, "Recorrência não foi desativada");
         }
@@ -702,9 +692,9 @@ namespace Cielo.Tests
                 customer: customer,
                 payment: payment);
 
-            var result = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
-            var result2 = _api.ActivateRecurrent(Guid.NewGuid(), result.Payment.RecurrentPayment.RecurrentPaymentId.Value).Result;
-            var result3 = _api.DeactivateRecurrent(Guid.NewGuid(), result.Payment.RecurrentPayment.RecurrentPaymentId.Value).Result;
+            var result = _api.CreateTransaction(Guid.NewGuid(), transaction);
+            var result2 = _api.ActivateRecurrent(Guid.NewGuid(), result.Payment.RecurrentPayment.RecurrentPaymentId.Value);
+            var result3 = _api.DeactivateRecurrent(Guid.NewGuid(), result.Payment.RecurrentPayment.RecurrentPaymentId.Value);
 
             Assert.IsTrue(result3, "Recorrência não foi reativada");
         }
@@ -747,20 +737,13 @@ namespace Cielo.Tests
                 customer: customer,
                 payment: payment);
 
-            try
-            {
-                var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
 
-                Assert.IsTrue(returnTransaction.Payment.GetPaymentType() == PaymentType.Boleto, "Erro no tipo de pagamento");
-                Assert.IsTrue(!string.IsNullOrEmpty(returnTransaction.Payment.BarCodeNumber), "Erro código de barra");
-                Assert.IsTrue(!string.IsNullOrEmpty(returnTransaction.Payment.DigitableLine), "Erro linha digitável");
-                Assert.IsTrue(!string.IsNullOrEmpty(returnTransaction.Payment.Links[0].Href), "Erro na url para redirecionar para o Boleto");
-            }
-            catch (Exception ex)
-            {
-                var e = ex.InnerException as CieloException;
-                throw;
-            }
+            var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction);
+
+            Assert.IsTrue(returnTransaction.Payment.GetPaymentType() == PaymentType.Boleto, "Erro no tipo de pagamento");
+            Assert.IsTrue(!string.IsNullOrEmpty(returnTransaction.Payment.BarCodeNumber), "Erro código de barra");
+            Assert.IsTrue(!string.IsNullOrEmpty(returnTransaction.Payment.DigitableLine), "Erro linha digitável");
+            Assert.IsTrue(!string.IsNullOrEmpty(returnTransaction.Payment.Links[0].Href), "Erro na url para redirecionar para o Boleto");
         }
 
         [TestMethod()]
@@ -787,18 +770,11 @@ namespace Cielo.Tests
                 customer: customer,
                 payment: payment);
 
-            try
-            {
-                var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction).Result;
 
-                Assert.IsTrue(returnTransaction.Payment.GetPaymentType() == PaymentType.EletronicTransfer, "Erro no tipo de pagamento");
-                Assert.IsTrue(!string.IsNullOrEmpty(returnTransaction.Payment.Links[0].Href), "Erro na url para redirecionar para transferencia eletronica");
-            }
-            catch (Exception ex)
-            {
-                var e = ex.InnerException as CieloException;
-                throw;
-            }
+            var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction);
+
+            Assert.IsTrue(returnTransaction.Payment.GetPaymentType() == PaymentType.EletronicTransfer, "Erro no tipo de pagamento");
+            Assert.IsTrue(!string.IsNullOrEmpty(returnTransaction.Payment.Links[0].Href), "Erro na url para redirecionar para transferencia eletronica");
         }
     }
 }
