@@ -41,12 +41,14 @@ Você pode utilizar qualquer provider JSON. Para isso implemente a interface ISe
              return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(json);
         }
     }
-## Transformando Async para Sync
-  Coloque no final da função o Result. Por exemplo:
+## Métodos Async e Sync
+  Método com o Sufixo Async será executado de forma assincrona.
     
-    api.CreateTransaction(Guid.NewGuid(), transaction).Result;
-    ou
-    Task.Run(() => api.CreateTransaction(Guid.NewGuid(), transaction)).Result;
+       await api.CreateTransactionAsync(Guid.NewGuid(), transaction);
+
+   Quando não tiver o sufixo Async será executado de forma sincrona. 
+   
+       api.CreateTransaction(Guid.NewGuid(), transaction));
     
 ## Chave do Sandbox
 Caso queira executar o teste unitário pode deixar a minha chave do Sandbox, se deseja utilizar a sua altere a classe:
@@ -59,12 +61,47 @@ Caso queira executar o teste unitário pode deixar a minha chave do Sandbox, se 
       }
      
 ## Nuget
-Install-Package CieloRest -Version 1.0.5
+Install-Package CieloRest -Version 1.0.6
       
 ## Documentação da Cielo
 * [Visão Geral](http://developercielo.github.io/Webservice-3.0/#visão-geral---api-cielo-ecommerce)
 
 * [Github](https://github.com/DeveloperCielo/Webservice-3.0/blob/57e2c5f3a3fc595b4693d286a2c47129bf5f388d/source/index.md)
+
+## Exemplo de utilização (utilize os casos de Teste para ver mais exemplos)
+
+            var customer = new Customer(name: _nome);
+
+            var creditCard = new Card(
+                cardNumber: SandboxCreditCard.NotAuthorizedCardExpired,
+                holder: _nomeCartao,
+                expirationDate: _invalidDate,
+                securityCode: "123",
+                brand: CardBrand.Visa);
+
+            var payment = new Payment(
+                amount: 150.04M,
+                currency: Currency.BRL,
+                installments: 1,
+                capture: true,
+                softDescriptor: _descricao,
+                card: creditCard);
+
+            var transaction = new Transaction(
+                merchantOrderId: Random().Next().ToString(),
+                customer: customer,
+                payment: payment);
+
+            try
+            {
+                var returnTransaction = _api.CreateTransaction(Guid.NewGuid(), transaction);
+
+                Assert.IsTrue(returnTransaction.Payment.GetStatus() == Status.Denied, "Transação não foi negada");
+            }
+            catch (CieloException ex)
+            {
+                Assert.IsTrue(ex.GetCieloErrors().Any(i => i.Code == 126));
+            }
 
 ## MIT License
 Copyright (c) 2017 Hugo de Brito V. R. Alves
