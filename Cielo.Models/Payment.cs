@@ -8,8 +8,7 @@ namespace Cielo
     public class Payment : ReturnStatus
     {
         private static readonly Regex softDescriptorMatch = new Regex("^[a-zA-Z0-9]?", RegexOptions.Compiled);
-
-        private string softDescriptor;
+        private string _softDescriptor;
 
         public Payment()
         {
@@ -36,7 +35,7 @@ namespace Cielo
             BoletoNumber = nossoNumero;
             Instructions = instrucao;
             this.ReturnUrl = returnUrl;
-            this.SoftDescriptor = softDescriptor;
+            //this.SoftDescriptor = softDescriptor;
             this.Country = country;
         }
 
@@ -107,7 +106,6 @@ namespace Cielo
 
         public int? Installments { get; set; }
 
-        //[JsonConverter(typeof(StringEnumConverter))]
         public string Interest { get; set; }
 
         public void SetInterest(Interest value)
@@ -150,18 +148,16 @@ namespace Cielo
         {
             get
             {
-                return softDescriptor;
+                return _softDescriptor;
             }
             set
             {
-                if (value != null && (
-                    value.Length > 13 ||
-                    !softDescriptorMatch.IsMatch(value)))
+                if (!string.IsNullOrEmpty(value) && (value.Length > 13 || !softDescriptorMatch.IsMatch(value)))
                 {
                     throw new ArgumentException("SoftDescriptor: it has a limit of 13 characters (not special) and no spaces.");
                 }
 
-                softDescriptor = value;
+                _softDescriptor = value;
             }
         }
         public string ReturnUrl { get; set; }
@@ -171,7 +167,6 @@ namespace Cielo
         /// </summary>
         public Wallet Wallet { get; set; }
 
-        // [JsonConverter(typeof(StringEnumConverter))]
         public string Provider { get; set; }
 
         public void SetProvider(Provider value)
@@ -187,7 +182,6 @@ namespace Cielo
 
         public Guid? PaymentId { get; set; }
 
-        // [JsonConverter(typeof(StringEnumConverter))]
         public string Type { get; set; }
 
         public void SetPaymentType(PaymentType value)
@@ -201,7 +195,6 @@ namespace Cielo
             return value;
         }
 
-        //[JsonConverter(typeof(CieloDecimalToIntegerConverter))]
         public string ServiceTaxAmount { get; set; }
 
         public void SetServiceTaxAmount(decimal value)
@@ -217,7 +210,6 @@ namespace Cielo
             return NumberHelper.IntegerToDecimal(ServiceTaxAmount);
         }
 
-        //  [JsonConverter(typeof(CieloDecimalToIntegerConverter))]
         public string Amount { get; set; }
 
         public void SetAmount(decimal value)
@@ -233,7 +225,6 @@ namespace Cielo
             return NumberHelper.IntegerToDecimal(Amount);
         }
 
-        //  [JsonConverter(typeof(CieloDecimalToIntegerConverter))]
         public string CapturedAmount { get; set; }
 
         public void SetCapturedAmount(decimal value)
@@ -254,7 +245,6 @@ namespace Cielo
 
         public FraudAnalysis FraudAnalysis { get; set; }
 
-        //[JsonConverter(typeof(StringEnumConverter))]
         public string Currency { get; set; }
         public Card DebitCard { get; set; }
 

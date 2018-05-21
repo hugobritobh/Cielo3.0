@@ -15,7 +15,6 @@ namespace Cielo
         public string Name { get; set; }
         public string Identity { get; set; }
 
-        //[JsonConverter(typeof(StringEnumConverter))]
         public string IdentityType { get; set; }
 
         public void SetIdentityType(IdentityType value)

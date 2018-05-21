@@ -38,7 +38,6 @@ namespace Cielo
         /// </summary>
         public bool? AuthorizeNow { get; set; }
 
-        //[JsonConverter(typeof(DateConverter))]
         public string StartDate { get; set; }
 
         public void SetStartDate(DateTime date)
@@ -46,7 +45,6 @@ namespace Cielo
             StartDate = date.ToString("yyyy-MM-dd");
         }
 
-      //  [JsonConverter(typeof(DateConverter))]
         public string EndDate { get; set; }
 
         public void SetEndDate(DateTime date)
@@ -54,7 +52,6 @@ namespace Cielo
             EndDate = date.ToString("yyyy-MM-dd");
         }
 
-      //  [JsonConverter(typeof(DateConverter))]
         public string NextRecurrency { get; set; }
 
         public void SetNextRecurrency(DateTime date)
@@ -62,7 +59,6 @@ namespace Cielo
             NextRecurrency = date.ToString("yyyy-MM-dd");
         }
 
-       // [JsonConverter(typeof(StringEnumConverter))]
         public string Interval { get; set; }
 
         public void SetInterval(Interval value)

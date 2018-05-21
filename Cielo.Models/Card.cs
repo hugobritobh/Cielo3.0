@@ -49,11 +49,6 @@ namespace Cielo
         public Guid? CardToken { get; set; }
         public string Holder { get; set; }
 
-        //TESTE
-        // [JsonConverter(typeof(CreditCardExpirationDateConverter))]
-        /// <summary>
-        /// Format MM/yyyy
-        /// </summary>
         public string ExpirationDate { get; set; }
 
         public void SetExpirationDate(DateTime date)
@@ -64,7 +59,6 @@ namespace Cielo
         public string SecurityCode { get; set; }
         public bool? SaveCard { get; set; }
 
-      //  [JsonConverter(typeof(StringEnumConverter))]
         public string Brand { get; set; }
 
         public void SetBrand(CardBrand value)

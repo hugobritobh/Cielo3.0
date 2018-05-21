@@ -40,8 +40,6 @@ namespace Cielo
         public Guid? CardToken { get; set; }
         public string Holder { get; set; }
 
-        //TESTE
-        // [JsonConverter(typeof(CreditCardExpirationDateConverter))]
         /// <summary>
         /// Format MM/yyyy
         /// </summary>

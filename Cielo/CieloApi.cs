@@ -10,7 +10,7 @@ namespace Cielo
 {
     public class CieloApi
     {
-        private readonly static HttpClient _http;
+        private readonly static HttpClient _http = new HttpClient();
 
         /// <summary>
         /// Tempo para TimeOut da requisição, por default é 60 segundos
@@ -23,7 +23,6 @@ namespace Cielo
 
         static CieloApi()
         {
-            _http = new HttpClient();
             _http.DefaultRequestHeaders.ExpectContinue = false;
 
             /*
