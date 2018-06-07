@@ -64,7 +64,7 @@ Caso queira executar o teste unitário pode deixar a minha chave do Sandbox, se 
       }
      
 ## Nuget
-Install-Package CieloRest -Version 1.0.7
+Install-Package CieloRest -Version 1.0.8
       
 ## Documentação da Cielo
 * [Visão Geral](http://developercielo.github.io/Webservice-3.0/#visão-geral---api-cielo-ecommerce)
@@ -107,7 +107,7 @@ Install-Package CieloRest -Version 1.0.7
             }
 
 ## MIT License
-Copyright (c) 2017 Hugo de Brito V. R. Alves
+Copyright (c) 2018 Hugo de Brito V. R. Alves
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
