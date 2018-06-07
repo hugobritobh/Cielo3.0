@@ -1,6 +1,7 @@
 ﻿using Cielo.Helper;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -279,6 +280,95 @@ namespace Cielo
         }
 
         /// <summary>
+        /// Cria uma Token de um cartão válido ou não.
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="recurrentPaymentId"></param>
+        /// <param name="active">Parâmetro que define se uma recorrência será desativada ou ativada novamente</param>
+        /// <exception cref="CieloException">Ocorreu algum erro ao tentar alterar a recorrência</exception>
+        /// <returns>Se retornou true é porque a operação foi realizada com sucesso</returns>
+        public async Task<ReturnStatusLink> CreateTokenAsync(Guid requestId, Card card)
+        {
+            card.CustomerName = card.Holder;
+            card.SecurityCode = string.Empty;
+
+            var url = Environment.GetTransactionUrl($"/1/Card");
+            var headers = GetHeaders(requestId);
+            var response = await CreateRequestAsync(url, card, Method.POST, headers);
+
+            //Se tiver errado será levantado uma exceção
+            return await GetResponseAsync<ReturnStatusLink>(response);
+        }
+
+        /// <summary>
+        /// Faz pagamento de 1 real e cancela logo em seguida para testar se o cartão é válido.
+        /// Gera token somente de cartão válido
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="card"></param>
+        /// <returns></returns>
+        public async Task<ReturnStatusLink> CreateTokenValidAsync(Guid requestId, Card creditCard, string softDescriptor = "Validando", Currency currency = Currency.BRL)
+        {
+            creditCard.SaveCard = true;
+            creditCard.CustomerName = creditCard.Holder;
+
+            var customer = new Customer(creditCard.CustomerName);
+
+            var payment = new Payment(amount: 1,
+                                      currency: currency,
+                                      paymentType: PaymentType.CreditCard,
+                                      installments: 1,
+                                      capture: true,
+                                      recurrentPayment: null,
+                                      softDescriptor: softDescriptor,
+                                      card: creditCard,
+                                      returnUrl: string.Empty);
+
+            var transaction = new Transaction(Guid.NewGuid().ToString(), customer, payment);
+
+            var result = await CreateTransactionAsync(requestId, transaction);
+            var status = result.Payment.GetStatus();
+            if (status == Status.Authorized || status == Status.PaymentConfirmed)
+            {
+                //Cancelando pagamento de 1 REAL
+                var resultCancel = await CancelTransactionAsync(Guid.NewGuid(), result.Payment.PaymentId.Value, 1);
+                var status2 = resultCancel.GetStatus();
+                if (status2 != Status.Voided)
+                {
+                    return new ReturnStatusLink
+                    {
+                        ReturnCode = resultCancel.ReturnCode,
+                        ReturnMessage = resultCancel.ReturnMessage,
+                        Status = resultCancel.Status,
+                        Links = resultCancel.Links.FirstOrDefault()
+                    };
+                }
+            }
+            else
+            {
+                return new ReturnStatusLink
+                {
+                    ReturnCode = result.Payment.ReturnCode,
+                    ReturnMessage = result.Payment.ReturnMessage,
+                    Status = result.Payment.Status,
+                    Links = result.Payment.Links.FirstOrDefault()
+                };
+            }
+
+            var token = result.Payment.CreditCard.CardToken.HasValue ? result.Payment.CreditCard.CardToken.Value.ToString() : string.Empty;
+            var statusLink = new ReturnStatusLink
+            {
+                CardToken = token,
+                ReturnCode = result.Payment.ReturnCode,
+                ReturnMessage = result.Payment.ReturnMessage,
+                Status = result.Payment.Status,
+                Links = result.Payment.Links.FirstOrDefault()
+            };
+
+            return statusLink;
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="requestId"></param>
@@ -306,6 +396,37 @@ namespace Cielo
         }
 
         #region Método Sincronos
+
+        /// <summary>
+        ///  Cria uma Token de um cartão válido ou não.
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="card"></param>
+        /// <returns></returns>
+        public ReturnStatusLink CreateToken(Guid requestId, Card card)
+        {
+            return RunTask(() =>
+            {
+                return CreateTokenAsync(requestId, card);
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="creditCard"></param>
+        /// <param name="softDescriptor"></param>
+        /// <param name="currency"></param>
+        /// <returns></returns>
+        public ReturnStatusLink CreateTokenValid(Guid requestId, Card creditCard, string softDescriptor = "Validando", Currency currency = Currency.BRL)
+        {
+            return RunTask(() =>
+            {
+                return CreateTokenValidAsync(requestId, creditCard, softDescriptor, currency);
+            });
+        }
+
 
         public ReturnStatus CaptureTransaction(Guid requestId, Guid paymentId, decimal? amount = null, decimal? serviceTaxAmount = null)
         {

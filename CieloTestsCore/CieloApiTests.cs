@@ -25,7 +25,7 @@ namespace Cielo.Tests
             _invalidDate = DateTime.Now.AddYears(-1);
 
             _nome = "Hugo Alves";
-            _nomeCartao = "Hugo de Brito V. R. Alves";
+            _nomeCartao = "Hugo de Brito V R Alves";
             _descricao = "Teste Cielo";
         }
 
@@ -775,6 +775,68 @@ namespace Cielo.Tests
 
             Assert.IsTrue(returnTransaction.Payment.GetPaymentType() == PaymentType.EletronicTransfer, "Erro no tipo de pagamento");
             Assert.IsTrue(!string.IsNullOrEmpty(returnTransaction.Payment.Links[0].Href), "Erro na url para redirecionar para transferencia eletronica");
+        }
+
+        [TestMethod()]
+        public void TransacaoCreateToken()
+        {
+            var customer = new Customer(name: _nome);
+
+            var creditCard = new Card(
+                cardNumber: SandboxCreditCard.Authorized2,
+                holder: _nomeCartao,
+                expirationDate: _validDate,
+                securityCode: "123",
+                brand: CardBrand.Visa,
+                saveCard: false);
+
+            /* store order number */
+            var merchantOrderId = new Random().Next();
+            //https://apisandbox.cieloecommerce.cielo.com.br/1/RecurrentPayment/{RecurrentPaymentId}/Deactivate
+
+            var result = _api.CreateToken(Guid.NewGuid(), creditCard);
+
+            Assert.IsTrue(!string.IsNullOrEmpty(result.CardToken), "Não foi gerado Token do cartão");
+        }
+
+        [TestMethod()]
+        public void TransacaoCreateTokenValid()
+        {
+            var customer = new Customer(name: _nome);
+
+            var creditCard = new Card(
+                cardNumber: SandboxCreditCard.Authorized2,
+                holder: _nomeCartao,
+                expirationDate: _validDate,
+                securityCode: "123",
+                brand: CardBrand.Visa,
+                saveCard: false);
+
+            /* store order number */
+            var merchantOrderId = new Random().Next();
+            var result = _api.CreateTokenValid(Guid.NewGuid(), creditCard);
+
+            Assert.IsTrue(!string.IsNullOrEmpty(result.CardToken), "Não foi gerado Token do cartão");
+        }
+
+        [TestMethod()]
+        public void TransacaoCreateTokenInvalid()
+        {
+            var customer = new Customer(name: _nome);
+
+            var creditCard = new Card(
+                cardNumber: SandboxCreditCard.NotAuthorizedCardProblems,
+                holder: _nomeCartao,
+                expirationDate: _validDate,
+                securityCode: "123",
+                brand: CardBrand.Visa,
+                saveCard: false);
+
+            /* store order number */
+            var merchantOrderId = new Random().Next();
+
+            ReturnStatusLink result = _api.CreateTokenValid(Guid.NewGuid(), creditCard);
+            Assert.IsTrue(string.IsNullOrEmpty(result.CardToken), "Foi gerado Token do cartão inválido.");
         }
     }
 }

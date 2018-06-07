@@ -49,6 +49,8 @@ namespace Cielo
         public Guid? CardToken { get; set; }
         public string Holder { get; set; }
 
+        public string CustomerName { get; set; }
+
         public string ExpirationDate { get; set; }
 
         public void SetExpirationDate(DateTime date)

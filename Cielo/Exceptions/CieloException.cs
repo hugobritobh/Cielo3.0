@@ -5,8 +5,22 @@ namespace Cielo
 {
     public class CieloException : Exception
     {
+        private readonly int _code = 0;
         private readonly string _json = string.Empty;
         private readonly ISerializerJSON _serializer;
+
+        public CieloException(string message, string code) : base(message)
+        {
+            try
+            {
+                _code = Convert.ToInt32(code);
+            }
+            catch 
+            {
+                _code = -1;
+            }
+          
+        }
 
         public CieloException(string message, string json, ISerializerJSON serializer) : base(message)
         {
@@ -22,7 +36,16 @@ namespace Cielo
         {
             if (string.IsNullOrEmpty(_json))
             {
-                return new Error[0];
+                if (string.IsNullOrEmpty(Message))
+                {
+                    return new Error[0];
+                }
+                else
+                {
+                    var erro = new Error() { Code = _code, Message = Message };
+                    return new Error[] { erro };
+                }
+
             }
 
             return _serializer.Deserialize<Error[]>(_json);

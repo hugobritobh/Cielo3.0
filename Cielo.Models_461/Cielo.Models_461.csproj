@@ -68,6 +68,9 @@
     <Compile Include="..\Cielo.Models\ReturnStatus.cs">
       <Link>ReturnStatus.cs</Link>
     </Compile>
+    <Compile Include="..\Cielo.Models\ReturnStatusLink.cs">
+      <Link>ReturnStatusLink.cs</Link>
+    </Compile>
     <Compile Include="..\Cielo.Models\Transaction.cs">
       <Link>Transaction.cs</Link>
     </Compile>

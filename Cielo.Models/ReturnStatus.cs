@@ -5,6 +5,7 @@ namespace Cielo
 {
     public class ReturnStatus
     {
+        public string CardToken { get; set; }
         public string ReturnCode { get; set; }
         public string ReturnMessage { get; set; }
         public string ReasonCode { get; set; }

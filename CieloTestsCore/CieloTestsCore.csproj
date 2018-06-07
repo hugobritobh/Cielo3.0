@@ -5,7 +5,9 @@
 
     <IsPackable>false</IsPackable>
 
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
+
+    <Authors>Hugo de Brito V. R. Alves</Authors>
   </PropertyGroup>
 
   <ItemGroup>

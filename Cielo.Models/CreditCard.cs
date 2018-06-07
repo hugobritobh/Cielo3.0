@@ -36,8 +36,13 @@ namespace Cielo
             this.SaveCard = saveCard;
         }
 
+        public string CustomerName { get; set; }
+
         public string CardNumber { get; set; }
         public Guid? CardToken { get; set; }
+        /// <summary>
+        /// Name
+        /// </summary>
         public string Holder { get; set; }
 
         /// <summary>
