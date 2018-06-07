@@ -18,8 +18,8 @@
 * [x] Cancelamento de autorização.
 * [x] Consulta de pagamentos.
 * [x] Tokenização do Cartão.
-      * [x] CreateToken - Tokeniza o cartão válido (ou inválido)
-      * [x] CreateTokenValid - Gera um pagamento de 1 real (cancela logo em seguida) para garantir que o cartão é válido e retorna a Token.
+    * [x] CreateToken - Tokeniza o cartão válido (ou inválido).
+    * [x] CreateTokenValid - Gera um pagamento de 1 real (cancela logo em seguida) para garantir que o cartão é válido e retorna a Token.
 
 ## Como utilizar
 Como não tem uma documentação formal utilize o projeto de Teste (CieloTestsCore) para ver os exemplos criados (e verificar se ainda estão funcionando).
