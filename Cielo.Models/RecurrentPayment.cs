@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Cielo
 {
@@ -17,11 +18,6 @@ namespace Cielo
 
         public RecurrentPayment(Interval interval, DateTime startDate, DateTime endDate)
         {
-            if (startDate.Date <= DateTime.Now.Date)
-            {
-                throw new ArgumentException("startDate: the starting date must be in the future");
-            }
-
             SetInterval(interval);
             this.SetStartDate(startDate);
             this.SetEndDate(endDate);
@@ -72,9 +68,21 @@ namespace Cielo
             return value;
         }
 
-        public Link Link { get; set; }
+        public List<Link> Links { get; set; }
         public string ReasonCode { get; set; }
 
         public string ReasonMessage { get; set; }
+
+        public int SuccessfulRecurrences { get; set; }
+
+        public List<RecurrentTransactions> RecurrentTransactions { get; set; }
+
+        public string Status { get; set; }
+
+        public Status GetStatus()
+        {
+            Enum.TryParse<Status>(Status, out Status value);
+            return value;
+        }
     }
 }

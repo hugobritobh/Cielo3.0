@@ -65,6 +65,12 @@
     <Compile Include="..\Cielo.Models\RecurrentPayment.cs">
       <Link>RecurrentPayment.cs</Link>
     </Compile>
+    <Compile Include="..\Cielo.Models\RecurrentTransactions.cs">
+      <Link>RecurrentTransactions.cs</Link>
+    </Compile>
+    <Compile Include="..\Cielo.Models\ReturnRecurrent.cs">
+      <Link>ReturnRecurrent.cs</Link>
+    </Compile>
     <Compile Include="..\Cielo.Models\ReturnStatus.cs">
       <Link>ReturnStatus.cs</Link>
     </Compile>

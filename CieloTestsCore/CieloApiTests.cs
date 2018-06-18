@@ -790,6 +790,8 @@ namespace Cielo.Tests
                 brand: CardBrand.Visa,
                 saveCard: false);
 
+            creditCard.CardNumber = "aabb000000000004";
+
             /* store order number */
             var merchantOrderId = new Random().Next();
             //https://apisandbox.cieloecommerce.cielo.com.br/1/RecurrentPayment/{RecurrentPaymentId}/Deactivate
@@ -837,6 +839,47 @@ namespace Cielo.Tests
 
             ReturnStatusLink result = _api.CreateTokenValid(Guid.NewGuid(), creditCard);
             Assert.IsTrue(string.IsNullOrEmpty(result.CardToken), "Foi gerado Token do cartão inválido.");
+        }
+
+        [TestMethod()]
+        public void GetRecurrentPayment()
+        {
+            var customer = new Customer(name: _nome);
+
+            var creditCard = new Card(
+                cardNumber: SandboxCreditCard.Authorized2,
+                holder: _nomeCartao,
+                expirationDate: _validDate,
+                securityCode: "123",
+                brand: CardBrand.Visa,
+                saveCard: false);
+
+            var recurrentPayment = new RecurrentPayment(
+                interval: Interval.Monthly,
+                endDate: DateTime.Now.AddMonths(6));
+
+            var payment = new Payment(
+                amount: 150.05M,
+                currency: Currency.BRL,
+                installments: 1,
+                softDescriptor: _descricao,
+                card: creditCard,
+                recurrentPayment: recurrentPayment);
+
+            /* store order number */
+            var merchantOrderId = new Random().Next();
+
+            var transaction = new Transaction(
+                merchantOrderId: merchantOrderId.ToString(),
+                customer: customer,
+                payment: payment);
+
+            var result = _api.CreateTransaction(Guid.NewGuid(), transaction);
+
+            var resultGet = _api.GetRecurrentPayment(Guid.NewGuid(), result.Payment.RecurrentPayment.RecurrentPaymentId.Value);
+
+            Assert.IsTrue(resultGet.RecurrentPayment.GetStatus() == Status.Authorized, "Transação não foi autorizada");
+            Assert.IsTrue(resultGet.RecurrentPayment.RecurrentTransactions.Count > 0, "Não foi registrado nenhuma recorrência");
         }
     }
 }

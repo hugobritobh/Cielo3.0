@@ -205,6 +205,21 @@ namespace Cielo
             return await GetResponseAsync<Transaction>(response);
         }
 
+
+        /// <summary>
+        /// Consulta uma transação
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="paymentId"></param>
+        /// <returns></returns>
+        public async Task<ReturnRecurrentPayment> GetRecurrentPaymentAsync(Guid requestId, Guid recurrentPaymentId)
+        {
+            var headers = GetHeaders(requestId);
+            var response = await CreateRequestAsync(Environment.GetQueryUrl($"/1/RecurrentPayment/{recurrentPaymentId}"), Method.GET, headers);
+
+            return await GetResponseAsync<ReturnRecurrentPayment>(response);
+        }
+
         /// <summary>
         /// Cancela uma transação (parcial ou total)
         /// </summary>
@@ -408,6 +423,14 @@ namespace Cielo
             return RunTask(() =>
             {
                 return CreateTokenAsync(requestId, card);
+            });
+        }
+
+        public ReturnRecurrentPayment GetRecurrentPayment(Guid requestId, Guid recurrentPaymentId)
+        {
+            return RunTask(() =>
+            {
+                return GetRecurrentPaymentAsync(requestId, recurrentPaymentId);
             });
         }
 

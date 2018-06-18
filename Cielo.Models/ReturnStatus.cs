@@ -15,16 +15,18 @@ namespace Cielo
 
         public string Status { get; set; }
 
-        public void SetInterval(Status value)
-        {
-            Status = value.ToString();
-        }
-
         public Status GetStatus()
         {
             Enum.TryParse<Status>(Status, out Status value);
             return value;
         }
+
+        public void SetInterval(Status value)
+        {
+            Status = value.ToString();
+        }
+
+
 
         public List<Link> Links { get; set; }
     }
