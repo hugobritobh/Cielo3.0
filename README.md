@@ -18,6 +18,7 @@
 * [x] Cancelamento de autorização.
 * [x] Consulta de pagamentos.
 * [x] Tokenização do Cartão.
+    * [x] GetRecurrentPayment - Busca informações sobre a recorrência
     * [x] CreateToken - Tokeniza o cartão válido (ou inválido).
     * [x] CreateTokenValid - Gera um pagamento de 1 real (cancela logo em seguida) para garantir que o cartão é válido e retorna a Token.
 
