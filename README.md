@@ -8,16 +8,14 @@
 ## Principais recursos
 
 * [x] Pagamentos por cartão de crédito.
-* [x] Pagamentos recorrentes.
-    * [x] Com autorização na primeira recorrência.
-    * [x] Com autorização a partir da primeira recorrência.
 * [x] Pagamentos por cartão de débito.
-* [x] Geração de token para o cartão para armazenamento seguro
+* [x] Pagamentos recorrentes (de acordo com a Cielo funciona somente para crédito)
+    * [x] Com autorização na primeira recorrência ou a partir de uma data.
 * [x] Boleto
 * [x] Transferência Eletrônica
 * [x] Cancelamento de autorização.
 * [x] Consulta de pagamentos.
-* [x] Tokenização do Cartão.
+* [x] Tokenização do Cartão 
     * [x] GetRecurrentPayment - Busca informações sobre a recorrência
     * [x] CreateToken - Tokeniza o cartão válido (ou inválido).
     * [x] CreateTokenValid - Gera um pagamento de 1 real (cancela logo em seguida) para garantir que o cartão é válido e retorna a Token.
