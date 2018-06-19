@@ -63,7 +63,7 @@ Caso queira executar o teste unitário pode deixar a minha chave do Sandbox, se 
       }
      
 ## Nuget
-Install-Package CieloRest -Version 1.0.8
+Install-Package CieloRest -Version 1.0.9
       
 ## Documentação da Cielo
 * [Visão Geral](http://developercielo.github.io/Webservice-3.0/#visão-geral---api-cielo-ecommerce)
