@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -38,12 +39,14 @@ namespace Cielo
         /// <param name="merchant"></param>
         /// <param name="serializer">Crie o seu Provider Json</param>
         /// <param name="timeOut">Tempo para TimeOut da requisição, por default é 60 segundos</param>
-        public CieloApi(CieloEnvironment environment, Merchant merchant, ISerializerJSON serializer, int timeOut = 60000)
+        public CieloApi(CieloEnvironment environment, Merchant merchant, ISerializerJSON serializer, int timeOut = 60000, SecurityProtocolType securityProtocolType = SecurityProtocolType.Tls12)
         {
             Environment = environment;
             Merchant = merchant;
             SerializerJSON = serializer;
             _timeOut = timeOut;
+
+            ServicePointManager.SecurityProtocol = securityProtocolType;
         }
 
         /// <summary>
