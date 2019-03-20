@@ -30,7 +30,7 @@ namespace Cielo.Tests
         }
 
         [TestMethod()]
-        public void AutorizacaoCredito()
+        public string AutorizacaoCredito()
         {
             decimal value = 150.01M;
             CardBrand brand = CardBrand.Visa;
@@ -74,6 +74,8 @@ namespace Cielo.Tests
             Assert.IsTrue(result.Payment.CreditCard.ExpirationDate == _validDate.ToString("MM/yyyy"), "Erro na data de vencimento do cartão");
             Assert.IsTrue(result.Payment.GetAmount() == value, "Erro no valor da fatura");
             Assert.IsTrue(result.Payment.GetStatus() == Status.Authorized, "Transação não foi autorizada");
+
+            return merchantOrderId.ToString();
         }
 
         [TestMethod()]
@@ -880,6 +882,17 @@ namespace Cielo.Tests
 
             Assert.IsTrue(resultGet.RecurrentPayment.GetStatus() == Status.Authorized, "Transação não foi autorizada");
             Assert.IsTrue(resultGet.RecurrentPayment.RecurrentTransactions.Count > 0, "Não foi registrado nenhuma recorrência");
+        }
+
+        [TestMethod()]
+        public void GetMerchandOrderID()
+        {
+            var orderId = AutorizacaoCredito();
+
+            var result = _api.GetMerchandOrderID(orderId);
+
+            Assert.IsTrue(result.ReasonMessage == "Successful");
+            Assert.IsTrue(result.Payments.Count == 1 && result.Payments[0] != null);
         }
     }
 }

@@ -437,6 +437,28 @@ namespace Cielo
             });
         }
 
+        public ReturnMerchandOrderID GetMerchandOrderID(string merchantOrderId)
+        {
+            return RunTask(() =>
+            {
+                return GetMerchandOrderIDAsync(merchantOrderId);
+            });
+        }
+
+        /// <summary>
+        /// Consulta uma transação
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="paymentId"></param>
+        /// <returns></returns>
+        public async Task<ReturnMerchandOrderID> GetMerchandOrderIDAsync(string merchantOrderId)
+        {
+            var headers = GetHeaders(Guid.NewGuid());
+            var response = await CreateRequestAsync(Environment.GetQueryUrl($"/1/sales?merchantOrderId={merchantOrderId}"), Method.GET, headers);
+
+            return await GetResponseAsync<ReturnMerchandOrderID>(response);
+        }
+
         /// <summary>
         /// 
         /// </summary>

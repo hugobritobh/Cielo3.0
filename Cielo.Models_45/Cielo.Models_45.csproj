@@ -62,11 +62,17 @@
     <Compile Include="..\Cielo.Models\Payment.cs">
       <Link>Payment.cs</Link>
     </Compile>
+    <Compile Include="..\Cielo.Models\PaymentDate.cs">
+      <Link>PaymentDate.cs</Link>
+    </Compile>
     <Compile Include="..\Cielo.Models\RecurrentPayment.cs">
       <Link>RecurrentPayment.cs</Link>
     </Compile>
     <Compile Include="..\Cielo.Models\RecurrentTransactions.cs">
       <Link>RecurrentTransactions.cs</Link>
+    </Compile>
+    <Compile Include="..\Cielo.Models\ReturnMerchandOrderID.cs">
+      <Link>ReturnMerchandOrderID.cs</Link>
     </Compile>
     <Compile Include="..\Cielo.Models\ReturnRecurrent.cs">
       <Link>ReturnRecurrent.cs</Link>
