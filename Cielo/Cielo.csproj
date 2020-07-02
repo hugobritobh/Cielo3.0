@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Version>1.0.11</Version>
+    <Version>1.0.12</Version>
     <Authors>Hugo de Brito Valadares Rodrigues Alves</Authors>
     <Product />
     <Company />
@@ -12,6 +12,8 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://github.com/hugobritobh/Cielo3.0</PackageLicenseUrl>
     <RepositoryUrl></RepositoryUrl>
+    <AssemblyVersion>1.0.12.0</AssemblyVersion>
+    <FileVersion>1.0.12.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
