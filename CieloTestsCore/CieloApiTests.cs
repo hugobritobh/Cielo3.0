@@ -21,8 +21,8 @@ namespace Cielo.Tests
             ISerializerJSON json = new SerializerJSON();
 
             _api = new CieloApi(CieloEnvironment.SANDBOX, Merchant.SANDBOX, json);
-            _validDate = DateTime.Now.AddYears(1);
-            _invalidDate = DateTime.Now.AddYears(-1);
+            _validDate = DateTime.Now.AddYears(2);
+            _invalidDate = DateTime.Now.AddYears(-2);
 
             _nome = "Hugo Alves";
             _nomeCartao = "Hugo de Brito V R Alves";
@@ -35,7 +35,22 @@ namespace Cielo.Tests
             decimal value = 150.01M;
             CardBrand brand = CardBrand.Visa;
 
-            var customer = new Customer(_nomeCartao);
+
+            var customer = new Customer(name: _nomeCartao)
+            {
+                Address = new Address()
+                {
+                    ZipCode = "3100000",
+                    City = "Belo Horizonte",
+                    State = "MG",
+                    Complement = "apartamento 501",
+                    District = "Pampulha",
+                    Street = "Rua Carvalho Nova Campos",
+                    Number = "321",
+                    Country = "BR"
+                }
+            };
+
             customer.SetIdentityType(IdentityType.CPF);
             customer.Identity = "14258222402"; //numero gerado aleatoriamente
             customer.SetBirthdate(1990, 2, 1);
@@ -330,7 +345,7 @@ namespace Cielo.Tests
             //Consultando
             var result = _api.GetTransaction(returnTransaction.Payment.PaymentId.Value);
 
-            Assert.IsTrue(returnTransaction.Payment.GetStatus() == Status.Denied, "Transação não foi negada");
+            Assert.IsTrue(result.Payment.GetStatus() == Status.Denied, "Transação não foi negada");
         }
 
         [TestMethod()]
@@ -430,6 +445,9 @@ namespace Cielo.Tests
 
             var result = _api.CreateTransaction(Guid.NewGuid(), transaction);
             var captureTransaction = _api.CaptureTransaction(Guid.NewGuid(), result.Payment.PaymentId.Value);
+
+            Assert.IsTrue(captureTransaction.GetStatus() == Status.PaymentConfirmed);
+
             var cancelationTransaction = _api.CancelTransaction(Guid.NewGuid(), result.Payment.PaymentId.Value);
 
             Assert.IsTrue(cancelationTransaction.GetStatus() == Status.Voided, "Cancelamento não teve sucesso");
@@ -573,7 +591,6 @@ namespace Cielo.Tests
 
             var result = _api.CreateTransaction(Guid.NewGuid(), transaction);
 
-            var status = result.Payment.GetStatus();
             Assert.IsTrue(result.Payment.GetStatus() == Status.Scheduled, "Recorrência não foi programada");
             Assert.IsTrue(result.Payment.RecurrentPayment.RecurrentPaymentId.HasValue, "Não foi gerado o RecurrentPaymentId");
         }
@@ -696,6 +713,9 @@ namespace Cielo.Tests
 
             var result = _api.CreateTransaction(Guid.NewGuid(), transaction);
             var result2 = _api.ActivateRecurrent(Guid.NewGuid(), result.Payment.RecurrentPayment.RecurrentPaymentId.Value);
+
+            Assert.IsTrue(result2);
+
             var result3 = _api.DeactivateRecurrent(Guid.NewGuid(), result.Payment.RecurrentPayment.RecurrentPaymentId.Value);
 
             Assert.IsTrue(result3, "Recorrência não foi reativada");
@@ -711,15 +731,18 @@ namespace Cielo.Tests
             decimal value = 162.55M;
             string boletoNumber = "0123456789";
 
-            var customer = new Customer(name: _nome);
-            customer.Address = new Address()
+            var customer = new Customer(name: _nome)
             {
-                ZipCode = "3100000",
-                City = "BH",
-                State = "MG",
-                Street = "Rua Teste",
-                Number = "321",
-                Country = "BR"
+                Address = new Address()
+                {
+                    ZipCode = "3100000",
+                    City = "BH",
+                    State = "MG",
+                    District = "Centro",
+                    Street = "Rua Teste",
+                    Number = "321",
+                    Country = "BR"
+                }
             };
 
             var payment = new Payment(value,
@@ -782,21 +805,12 @@ namespace Cielo.Tests
         [TestMethod()]
         public void TransacaoCreateToken()
         {
-            var customer = new Customer(name: _nome);
-
             var creditCard = new Card(
                 cardNumber: SandboxCreditCard.Authorized2,
                 holder: _nomeCartao,
                 expirationDate: _validDate,
                 securityCode: "123",
-                brand: CardBrand.Visa,
-                saveCard: false);
-
-            creditCard.CardNumber = "aabb000000000004";
-
-            /* store order number */
-            var merchantOrderId = new Random().Next();
-            //https://apisandbox.cieloecommerce.cielo.com.br/1/RecurrentPayment/{RecurrentPaymentId}/Deactivate
+                brand: CardBrand.Visa);
 
             var result = _api.CreateToken(Guid.NewGuid(), creditCard);
 
@@ -804,10 +818,72 @@ namespace Cielo.Tests
         }
 
         [TestMethod()]
+        [ExpectedException(typeof(CieloException))]
+        public void TransacaoComErroAddress()
+        {
+            var customer = new Customer(_nome)
+            {
+                Address = new Address()
+                {
+                    City = "Belo Horizonte",
+                    Complement = "Condiminio Teste",
+                    District = "Buritis da Pampulha",
+                    Number = "9999",
+                    State = "MG",
+                    Street = "Rua dos Otonis com Afonso Pena",
+                    ZipCode = "3111111",
+                    Country = "BR"
+                }
+            };
+
+            var creditCard = new Card(
+                cardNumber: SandboxCreditCard.Authorized2,
+                holder: _nomeCartao,
+                expirationDate: _validDate,
+                securityCode: "123",
+                brand: CardBrand.Visa,
+                saveCard: true);
+
+            var payment = new Payment(
+                amount: 157.37M,
+                currency: Currency.BRL,
+                installments: 1,
+                capture: false,
+                softDescriptor: _descricao,
+                card: creditCard);
+
+            /* store order number */
+            var merchantOrderId = new Random().Next();
+
+            var transaction = new Transaction(
+                merchantOrderId: merchantOrderId.ToString(),
+                customer: customer,
+                payment: payment);
+
+            _api.CreateTransaction(Guid.NewGuid(), transaction);
+        }
+
+
+        [TestMethod()]
+        [ExpectedException(typeof(CieloException))]
+        public void TransacaoCreateTokenErro()
+        {
+            var creditCard = new Card(
+           cardNumber: "0000000000000011",
+           holder: _nomeCartao,
+           expirationDate: _validDate,
+           securityCode: "123",
+           brand: CardBrand.Visa);
+
+            var result = _api.CreateToken(Guid.NewGuid(), creditCard);
+
+            //Era para dar exception por causa do Mod 10 do número do cartão
+            Assert.IsTrue(string.IsNullOrEmpty(result.CardToken), "Foi gerado Token do cartão");
+        }
+
+        [TestMethod()]
         public void TransacaoCreateTokenValid()
         {
-            var customer = new Customer(name: _nome);
-
             var creditCard = new Card(
                 cardNumber: SandboxCreditCard.Authorized2,
                 holder: _nomeCartao,
@@ -816,8 +892,6 @@ namespace Cielo.Tests
                 brand: CardBrand.Visa,
                 saveCard: false);
 
-            /* store order number */
-            var merchantOrderId = new Random().Next();
             var result = _api.CreateTokenValid(Guid.NewGuid(), creditCard);
 
             Assert.IsTrue(!string.IsNullOrEmpty(result.CardToken), "Não foi gerado Token do cartão");
@@ -826,8 +900,6 @@ namespace Cielo.Tests
         [TestMethod()]
         public void TransacaoCreateTokenInvalid()
         {
-            var customer = new Customer(name: _nome);
-
             var creditCard = new Card(
                 cardNumber: SandboxCreditCard.NotAuthorizedCardProblems,
                 holder: _nomeCartao,
@@ -835,9 +907,6 @@ namespace Cielo.Tests
                 securityCode: "123",
                 brand: CardBrand.Visa,
                 saveCard: false);
-
-            /* store order number */
-            var merchantOrderId = new Random().Next();
 
             ReturnStatusLink result = _api.CreateTokenValid(Guid.NewGuid(), creditCard);
             Assert.IsTrue(string.IsNullOrEmpty(result.CardToken), "Foi gerado Token do cartão inválido.");

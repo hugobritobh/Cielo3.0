@@ -45,10 +45,17 @@ namespace Cielo
                     var erro = new Error() { Code = _code, Message = Message };
                     return new Error[] { erro };
                 }
-
             }
-
-            return _serializer.Deserialize<Error[]>(_json);
+            else
+            {
+                if (!_json.Contains("["))
+                {
+                    var erro = _serializer.Deserialize<Error>(_json);
+                    return new Error[] { erro };
+                }
+                
+                return _serializer.Deserialize<Error[]>(_json);
+            }
         }
 
         /// <summary>

@@ -17,7 +17,7 @@ namespace Cielo
         /// <summary>
         /// Tempo para TimeOut da requisição, por default é 60 segundos
         /// </summary>
-        private int _timeOut = 0;
+        private readonly int _timeOut = 0;
 
         public Merchant Merchant { get; }
         public ISerializerJSON SerializerJSON { get; }
@@ -60,7 +60,7 @@ namespace Cielo
 
         private IDictionary<string, string> GetHeaders(Guid requestId)
         {
-            return new Dictionary<string, string>
+            return new Dictionary<string, string>(1)
             {
                 { "RequestId", requestId.ToString() }
             };
@@ -178,6 +178,17 @@ namespace Cielo
         /// <returns></returns>
         public async Task<Transaction> CreateTransactionAsync(Guid requestId, Transaction transaction)
         {
+            if (transaction != null &&
+                transaction.Customer != null &&
+                transaction.Customer.Address != null)
+            {
+                var error = transaction.Customer.Address.IsValid();
+                if (!string.IsNullOrEmpty(error))
+                {
+                    throw new CieloException(error, "1");
+                }
+            }         
+
             var headers = GetHeaders(requestId);
             var response = await CreateRequestAsync(Environment.GetTransactionUrl("/1/sales/"), transaction, Method.POST, headers);
 
@@ -460,7 +471,8 @@ namespace Cielo
         }
 
         /// <summary>
-        /// 
+        /// Faz pagamento de 1 real e cancela logo em seguida para testar se o cartão é válido.
+        /// Gera token somente de cartão válido
         /// </summary>
         /// <param name="requestId"></param>
         /// <param name="creditCard"></param>
@@ -475,7 +487,14 @@ namespace Cielo
             });
         }
 
-
+        /// <summary>
+        /// Captura uma transação (parcial ou total)
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="paymentId"></param>
+        /// <param name="amount"></param>
+        /// <param name="serviceTaxAmount"></param>
+        /// <returns></returns>
         public ReturnStatus CaptureTransaction(Guid requestId, Guid paymentId, decimal? amount = null, decimal? serviceTaxAmount = null)
         {
             return RunTask(() =>
@@ -508,6 +527,12 @@ namespace Cielo
             });
         }
 
+        /// <summary>
+        /// Consulta uma transação
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="paymentId"></param>
+        /// <returns></returns>
         public Transaction GetTransaction(Guid requestId, Guid paymentId)
         {
             return RunTask(() =>
@@ -516,6 +541,11 @@ namespace Cielo
             });
         }
 
+        /// <summary>
+        /// Consulta uma transação
+        /// </summary>
+        /// <param name="paymentId"></param>
+        /// <returns></returns>
         public Transaction GetTransaction(Guid paymentId)
         {
             return RunTask(() =>
@@ -524,6 +554,12 @@ namespace Cielo
             });
         }
 
+        /// <summary>
+        /// Envia uma transação
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         public Transaction CreateTransaction(Guid requestId, Transaction transaction)
         {
             return RunTask(() =>
@@ -536,7 +572,7 @@ namespace Cielo
         {
             try
             {
-                return Task.Run(() => method()).Result;
+                return Task.Run(method).ConfigureAwait(false).GetAwaiter().GetResult();
             }
             catch (Exception e)
             {
@@ -544,11 +580,14 @@ namespace Cielo
                 {
                     throw ex;
                 }
+                else if (e is CieloException exCielo)
+                {
+                    throw exCielo;
+                }
 
                 throw e;
             }
         }
-
         #endregion
     }
 }
