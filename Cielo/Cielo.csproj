@@ -2,18 +2,26 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Version>1.0.14</Version>
+    <Version>1.0.16</Version>
     <Authors>Hugo de Brito Valadares Rodrigues Alves</Authors>
     <Product />
     <Company />
-    <Description>Integração com a API da Cielo 3.0</Description>
+    <Description>Integração com API da Cielo 3.0 (Funções Assíncronas, HttpClient, .Net Standard 2.1, NET Core, NET 4.8).
+
+Documentação e caso de testes no site do Github (exibido no project url).</Description>
     <PackageProjectUrl>https://github.com/hugobritobh/Cielo3.0</PackageProjectUrl>
     <PackageId>CieloRest</PackageId>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://github.com/hugobritobh/Cielo3.0</PackageLicenseUrl>
-    <RepositoryUrl></RepositoryUrl>
-    <AssemblyVersion>1.0.14.0</AssemblyVersion>
-    <FileVersion>1.0.14.0</FileVersion>
+    <RepositoryUrl>https://github.com/hugobritobh/Cielo3.0</RepositoryUrl>
+    <AssemblyVersion>1.0.16.0</AssemblyVersion>
+    <FileVersion>1.0.16.0</FileVersion>
+    <PackageTags>Cielo</PackageTags>
+    <NeutralLanguage>pt-BR</NeutralLanguage>
+    <RepositoryType>https://github.com/hugobritobh/Cielo3.0.git</RepositoryType>
+    <PackageReleaseNotes>Update em Package
+E colocando o Deserialize de forma Async</PackageReleaseNotes>
+    <PackageIcon>LogoCielo.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,7 +31,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <None Include="..\LogoCielo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

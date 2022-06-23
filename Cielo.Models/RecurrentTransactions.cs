@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Cielo
+﻿namespace Cielo
 {
     public class RecurrentTransactions
     {

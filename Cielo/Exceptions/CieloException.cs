@@ -15,11 +15,11 @@ namespace Cielo
             {
                 _code = Convert.ToInt32(code);
             }
-            catch 
+            catch
             {
                 _code = -1;
             }
-          
+
         }
 
         public CieloException(string message, string json, ISerializerJSON serializer) : base(message)
@@ -53,7 +53,7 @@ namespace Cielo
                     var erro = _serializer.Deserialize<Error>(_json);
                     return new Error[] { erro };
                 }
-                
+
                 return _serializer.Deserialize<Error[]>(_json);
             }
         }

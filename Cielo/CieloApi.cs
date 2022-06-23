@@ -124,8 +124,10 @@ namespace Cielo
                     httpMethod = HttpMethod.Delete;
                 }
 
-                var request = GetExecute(fullUrl, headers, httpMethod, content);
-                return await _http.SendAsync(request, tokenSource.Token).ConfigureAwait(false);
+                using (var request = GetExecute(fullUrl, headers, httpMethod, content))
+                {
+                    return await _http.SendAsync(request, tokenSource.Token).ConfigureAwait(false);
+                }
             }
             catch (OperationCanceledException e)
             {
@@ -156,9 +158,9 @@ namespace Cielo
         }
         private async Task<T> GetResponseAsync<T>(HttpResponseMessage response)
         {
-            await CheckResponseAsync(response);
+            await CheckResponseAsync(response).ConfigureAwait(false);
 
-            return SerializerJSON.Deserialize<T>(response.Content);
+            return await SerializerJSON.DeserializeAsync<T>(response.Content).ConfigureAwait(false);
         }
 
         private async Task CheckResponseAsync(HttpResponseMessage response)
@@ -187,12 +189,14 @@ namespace Cielo
                 {
                     throw new CieloException(error, "1");
                 }
-            }         
+            }
 
             var headers = GetHeaders(requestId);
-            var response = await CreateRequestAsync(Environment.GetTransactionUrl("/1/sales/"), transaction, Method.POST, headers);
+            using (var response = await CreateRequestAsync(Environment.GetTransactionUrl("/1/sales/"), transaction, Method.POST, headers))
+            {
 
-            return await GetResponseAsync<Transaction>(response);
+                return await GetResponseAsync<Transaction>(response);
+            }
         }
 
         /// <summary>
@@ -214,9 +218,11 @@ namespace Cielo
         public async Task<Transaction> GetTransactionAsync(Guid requestId, Guid paymentId)
         {
             var headers = GetHeaders(requestId);
-            var response = await CreateRequestAsync(Environment.GetQueryUrl($"/1/sales/{paymentId}"), Method.GET, headers);
 
-            return await GetResponseAsync<Transaction>(response);
+            using (var response = await CreateRequestAsync(Environment.GetQueryUrl($"/1/sales/{paymentId}"), Method.GET, headers))
+            {
+                return await GetResponseAsync<Transaction>(response);
+            }
         }
 
 
@@ -465,9 +471,11 @@ namespace Cielo
         public async Task<ReturnMerchandOrderID> GetMerchandOrderIDAsync(string merchantOrderId)
         {
             var headers = GetHeaders(Guid.NewGuid());
-            var response = await CreateRequestAsync(Environment.GetQueryUrl($"/1/sales?merchantOrderId={merchantOrderId}"), Method.GET, headers);
+            using (var response = await CreateRequestAsync(Environment.GetQueryUrl($"/1/sales?merchantOrderId={merchantOrderId}"), Method.GET, headers))
+            {
 
-            return await GetResponseAsync<ReturnMerchandOrderID>(response);
+                return await GetResponseAsync<ReturnMerchandOrderID>(response);
+            }
         }
 
         /// <summary>
@@ -585,7 +593,7 @@ namespace Cielo
                     throw exCielo;
                 }
 
-                throw e;
+                throw;
             }
         }
         #endregion

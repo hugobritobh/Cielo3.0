@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Cielo
+﻿namespace Cielo
 {
     public class Address
     {

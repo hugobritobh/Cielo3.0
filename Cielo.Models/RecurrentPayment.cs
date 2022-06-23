@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Cielo
 {
-    public class RecurrentPayment 
+    public class RecurrentPayment
     {
         public RecurrentPayment()
         {

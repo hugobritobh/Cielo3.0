@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Cielo
+﻿namespace Cielo
 {
     /// <summary>
     /// Utilizado para cartão de Débito
@@ -19,7 +17,7 @@ namespace Cielo
     {
         public string CaptureCode { get; set; }
     }
-        
+
     public enum TypeWallet
     {
         VisaCheckout,

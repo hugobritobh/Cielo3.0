@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Cielo
 {
@@ -9,8 +10,22 @@ namespace Cielo
     {
         string Serialize<T>(T value);
 
-        T Deserialize<T>(HttpContent content);
+        /// <summary>
+        /// Utilizado para Deserializar os Erros
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="jsonText"></param>
+        /// <returns></returns>
+        T Deserialize<T>(string jsonText);
 
-        T Deserialize<T>(string json);
+        /// <summary>
+        /// Utilizado para deserializar as requisições
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        Task<T> DeserializeAsync<T>(HttpContent content);
+
+
     }
 }

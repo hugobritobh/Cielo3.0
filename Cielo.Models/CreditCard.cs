@@ -58,7 +58,7 @@ namespace Cielo
         public string SecurityCode { get; set; }
         public bool? SaveCard { get; set; }
 
-      //  [JsonConverter(typeof(StringEnumConverter))]
+        //  [JsonConverter(typeof(StringEnumConverter))]
         public string Brand { get; set; }
 
         public void SetBrand(CardBrand value)
