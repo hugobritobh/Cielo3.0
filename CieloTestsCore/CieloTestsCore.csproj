@@ -21,8 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Cielo.Models_48\Cielo.Models_48.csproj" />
-    <ProjectReference Include="..\Cielo_48\Cielo_48.csproj" />
+    <ProjectReference Include="..\Cielo.Models\Cielo.Models.csproj" />
+    <ProjectReference Include="..\Cielo\Cielo.csproj" />
   </ItemGroup>
 
 </Project>
