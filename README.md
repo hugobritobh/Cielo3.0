@@ -3,7 +3,7 @@
 * [x] HttpClient.
 * [x] Sem dependência a bibliotecas JSON (NewtonSoft, Jil, MessagePack...)
 * [x] Testes Unitários
-* [x] .Net Standard 2.1
+* [x] .Net Standard 2
 
 ## Principais recursos
 
