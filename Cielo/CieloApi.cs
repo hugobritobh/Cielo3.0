@@ -315,6 +315,161 @@ namespace Cielo
         }
 
         /// <summary>
+        /// Altera o valor apartir da próxima recorrencia.
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="recurrentPaymentId">Identificador da recorrencia que deseja alterar.</param>
+        /// <param name="amount">Novo valor da recorrencia.</param>
+        /// <returns>true em caso de sucesso.</returns>
+        public async Task<bool> ChangeAmountRecurrentAsync(Guid requestId, Guid recurrentPaymentId, decimal amount)
+        {
+            return await ManagerRecurrent(requestId, recurrentPaymentId, NumberHelper.DecimalToInteger(amount), "Amount");
+
+            //var url = Environment.GetTransactionUrl($"/1/RecurrentPayment/{recurrentPaymentId}/Amount");
+
+            //var headers = GetHeaders(requestId);
+            //var response = await CreateRequestAsync(url, NumberHelper.DecimalToInteger(amount), Method.PUT, headers);
+
+            ////Se tiver errado será levantado uma exceção
+            //await CheckResponseAsync(response);
+
+            //return true;
+        }
+
+        /// <summary>
+        /// Altera o dia da recorrência.
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="recurrentPaymentId">Identificador da recorrencia que deseja alterar.</param>
+        /// <param name="day">Novo dia para a recorrencia.</param>
+        /// <returns>true em caso de sucesso.</returns>
+        public async Task<bool> ChangeDayRecurrentAsync(Guid requestId, Guid recurrentPaymentId, int day)
+        {
+            return await ManagerRecurrent(requestId, recurrentPaymentId, day, "RecurrencyDay");
+
+            //var url = Environment.GetTransactionUrl($"/1/RecurrentPayment/{recurrentPaymentId}/RecurrencyDay");
+
+            //var headers = GetHeaders(requestId);
+            //var response = await CreateRequestAsync(url, day, Method.PUT, headers);
+
+            ////Se tiver errado será levantado uma exceção
+            //await CheckResponseAsync(response);
+
+            //return true;
+        }
+
+        /// <summary>
+        /// Altera a data do próximo pagamento.
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="recurrentPaymentId">Identificador da recorrencia que deseja alterar.</param>
+        /// <param name="nextPayment">Nova data para o próximo pagamento.</param>
+        /// <returns>true em caso de sucesso.</returns>
+        public async Task<bool> ChangeNextPaymentDateRecurrentAsync(Guid requestId, Guid recurrentPaymentId, DateTime nextPayment)
+        {
+            return await ManagerRecurrent(requestId, recurrentPaymentId, nextPayment, "NextPaymentDate");
+
+            //var url = Environment.GetTransactionUrl($"/1/RecurrentPayment/{recurrentPaymentId}/NextPaymentDate");
+
+            //var headers = GetHeaders(requestId);
+            //var response = await CreateRequestAsync(url, nextPayment, Method.PUT, headers);
+
+            ////Se tiver errado será levantado uma exceção
+            //await CheckResponseAsync(response);
+
+            //return true;
+        }
+
+        /// <summary>
+        /// Alterar os dados de pagamento da recorrência.
+        /// Atenção: Essa alteração afeta a todos os dados do nó Payment. Então para manter os dados anteriores você deve informar os campos que não vão sofre alterações com os mesmos valores que já estavam salvos.
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="recurrentPaymentId">Identificador da recorrencia que deseja alterar.</param>
+        /// <param name="payment">Informações de pagamento.</param>
+        /// <returns>true em caso de sucesso.</returns>
+        public async Task<bool> ChangePaymentRecurrentAsync(Guid requestId, Guid recurrentPaymentId, Payment payment)
+        {
+            return await ManagerRecurrent(requestId, recurrentPaymentId, payment, "Payment");
+
+            //var url = Environment.GetTransactionUrl($"/1/RecurrentPayment/{recurrentPaymentId}/Payment");
+
+            //var headers = GetHeaders(requestId);
+            //var response = await CreateRequestAsync(url, payment, Method.PUT, headers);
+
+            ////Se tiver errado será levantado uma exceção
+            //await CheckResponseAsync(response);
+
+            //return true;
+        }
+
+        /// <summary>
+        /// Altera dados do comprador da recorrência.
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="recurrentPaymentId">Identificador da recorrencia que deseja alterar.</param>
+        /// <param name="customer">Dados do comprador da recorrência.</param>
+        /// <returns>true em caso de sucesso.</returns>
+        public async Task<bool> ChangeCustomerRecurrentAsync(Guid requestId, Guid recurrentPaymentId, Customer customer)
+        {
+            return await ManagerRecurrent(requestId, recurrentPaymentId, customer, "Customer");
+
+            //var url = Environment.GetTransactionUrl($"/1/RecurrentPayment/{recurrentPaymentId}/Customer");
+
+            //var headers = GetHeaders(requestId);
+            //var response = await CreateRequestAsync(url, customer, Method.PUT, headers);
+
+            ////Se tiver errado será levantado uma exceção
+            //await CheckResponseAsync(response);
+
+            //return true;
+        }
+
+        /// <summary>
+        /// Altera dados do comprador da recorrência.
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="recurrentPaymentId">Identificador da recorrencia que deseja alterar.</param>
+        /// <param name="endDate">Data final da recorrência.</param>
+        /// <returns>true em caso de sucesso.</returns>
+        public async Task<bool> ChangeEndDateRecurrentAsync(Guid requestId, Guid recurrentPaymentId, DateTime endDate)
+        {
+            return await ManagerRecurrent(requestId, recurrentPaymentId, endDate, "EndDate");
+
+            //var url = Environment.GetTransactionUrl($"/1/RecurrentPayment/{recurrentPaymentId}/EndDate");
+
+            //var headers = GetHeaders(requestId);
+            //var response = await CreateRequestAsync(url, endDate, Method.PUT, headers);
+
+            ////Se tiver errado será levantado uma exceção
+            //await CheckResponseAsync(response);
+
+            //return true;
+        }
+
+        /// <summary>
+        /// Altera a data final da recorrência.
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="recurrentPaymentId">Identificador da recorrencia que deseja alterar.</param>
+        /// <param name="interval">Intervalo da recorrencia.</param>
+        /// <returns>true em caso de sucesso.</returns>
+        public async Task<bool> ChangeIntervalRecurrentAsync(Guid requestId, Guid recurrentPaymentId, Interval interval)
+        {
+            return await ManagerRecurrent(requestId, recurrentPaymentId, interval, "Interval");
+
+            //var url = Environment.GetTransactionUrl($"/1/RecurrentPayment/{recurrentPaymentId}/Interval");
+
+            //var headers = GetHeaders(requestId);
+            //var response = await CreateRequestAsync(url, interval, Method.PUT, headers);
+
+            ////Se tiver errado será levantado uma exceção
+            //await CheckResponseAsync(response);
+
+            //return true;
+        }
+
+        /// <summary>
         /// Cria uma Token de um cartão válido ou não.
         /// </summary>
         /// <param name="requestId"></param>
@@ -430,6 +585,19 @@ namespace Cielo
             return true;
         }
 
+        private async Task<bool> ManagerRecurrent(Guid requestId, Guid recurrentPaymentId, object data, string service)
+        {
+            var url = Environment.GetTransactionUrl($"/1/RecurrentPayment/{recurrentPaymentId}/{service}");
+
+            var headers = GetHeaders(requestId);
+            var response = await CreateRequestAsync(url, data, Method.PUT, headers);
+
+            //Se tiver errado será levantado uma exceção
+            await CheckResponseAsync(response);
+
+            return true;
+        }
+
         #region Método Sincronos
 
         /// <summary>
@@ -475,6 +643,29 @@ namespace Cielo
             {
 
                 return await GetResponseAsync<ReturnMerchandOrderID>(response);
+            }
+        }
+
+        public ReturnTId GetTId(string tid)
+        {
+            return RunTask(() =>
+            {
+                return GetTIdAsync(tid);
+            });
+        }
+
+        /// <summary>
+        /// Para consultar uma venda através do número de referência único da transação na adquirente (TId), execute um GET conforme descrito a seguir.
+        /// São elegíveis para a consulta apenas transações dentro dos últimos três meses.
+        /// </summary>
+        /// <param name="tid"></param>
+        /// <returns></returns>
+        public async Task<ReturnTId> GetTIdAsync(string tid)
+        {
+            var headers = GetHeaders(Guid.NewGuid());
+            using (var response = await CreateRequestAsync(Environment.GetQueryUrl($"/1/sales/acquirerTid/{tid}"), Method.GET, headers))
+            {
+                return await GetResponseAsync<ReturnTId>(response);
             }
         }
 
@@ -524,6 +715,105 @@ namespace Cielo
             return RunTask(() =>
             {
                 return DeactivateRecurrentAsync(requestId, recurrentPaymentId);
+            });
+        }
+
+        public bool ChangeAmountRecurrent(Guid requestId, Guid recurrentPaymentId, decimal amount)
+        {
+            return RunTask(() =>
+            {
+                return ChangeAmountRecurrentAsync(requestId, recurrentPaymentId, amount);
+            });
+        }
+
+        /// <summary>
+        /// Altera o dia da recorrência.
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="recurrentPaymentId">Identificador da recorrencia que deseja alterar.</param>
+        /// <param name="day">Novo dia para a recorrencia.</param>
+        /// <returns>true em caso de sucesso.</returns>
+        public bool ChangeDayRecurrent(Guid requestId, Guid recurrentPaymentId, int day)
+        {
+            return RunTask(() =>
+            {
+                return ChangeDayRecurrentAsync(requestId, recurrentPaymentId, day);
+            });
+        }
+
+        /// <summary>
+        /// Altera a data do próximo pagamento.
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="recurrentPaymentId">Identificador da recorrencia que deseja alterar.</param>
+        /// <param name="nextPayment">Nova data para o próximo pagamento.</param>
+        /// <returns>true em caso de sucesso.</returns>
+        public bool ChangeNextPaymentDateRecurrent(Guid requestId, Guid recurrentPaymentId, DateTime nextPayment)
+        {
+            return RunTask(() =>
+            {
+                return ChangeNextPaymentDateRecurrentAsync(requestId, recurrentPaymentId, nextPayment);
+            });
+        }
+
+        /// <summary>
+        /// Alterar os dados de pagamento da recorrência.
+        /// Atenção: Essa alteração afeta a todos os dados do nó Payment. Então para manter os dados anteriores você deve informar os campos que não vão sofre alterações com os mesmos valores que já estavam salvos.
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="recurrentPaymentId">Identificador da recorrencia que deseja alterar.</param>
+        /// <param name="payment">Dados de pagamento.</param>
+        /// <returns>true em caso de sucesso.</returns>
+        public bool ChangePaymentRecurrent(Guid requestId, Guid recurrentPaymentId, Payment payment)
+        {
+            return RunTask(() =>
+            {
+                return ChangePaymentRecurrentAsync(requestId, recurrentPaymentId, payment);
+            });
+        }
+
+        /// <summary>
+        /// Altera dados do comprador da recorrência.
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="recurrentPaymentId">Identificador da recorrencia que deseja alterar.</param>
+        /// <param name="customer">Dados do comprador da recorrência.</param>
+        /// <returns>true em caso de sucesso.</returns>
+        public bool ChangeCustomerRecurrent(Guid requestId, Guid recurrentPaymentId, Customer customer)
+        {
+            return RunTask(() =>
+            {
+                return ChangeCustomerRecurrentAsync(requestId, recurrentPaymentId, customer);
+            });
+        }
+
+        /// <summary>
+        /// Altera a data final da recorrência.
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="recurrentPaymentId">Identificador da recorrencia que deseja alterar.</param>
+        /// <param name="endDate">Data final da recorrencia.</param>
+        /// <returns>true em caso de sucesso.</returns>
+        public bool ChangeEndDateRecurrent(Guid requestId, Guid recurrentPaymentId, DateTime endDate)
+        {
+            return RunTask(() =>
+            {
+                return ChangeEndDateRecurrentAsync(requestId, recurrentPaymentId, endDate);
+            });
+        }
+
+        /// <summary>
+        /// Altera a data final da recorrência.
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="recurrentPaymentId">Identificador da recorrencia que deseja alterar.</param>
+        /// <param name="interval">Intervalo da recorrencia.</param>
+        /// <returns>true em caso de sucesso.</returns>
+        public bool ChangeIntervalRecurrent(Guid requestId, Guid recurrentPaymentId, Interval interval)
+        {
+            return RunTask(() =>
+            {
+                return ChangeIntervalRecurrentAsync(requestId, recurrentPaymentId, interval);
             });
         }
 
