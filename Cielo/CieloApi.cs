@@ -324,16 +324,6 @@ namespace Cielo
         public async Task<bool> ChangeAmountRecurrentAsync(Guid requestId, Guid recurrentPaymentId, decimal amount)
         {
             return await ManagerRecurrent(requestId, recurrentPaymentId, NumberHelper.DecimalToInteger(amount), "Amount");
-
-            //var url = Environment.GetTransactionUrl($"/1/RecurrentPayment/{recurrentPaymentId}/Amount");
-
-            //var headers = GetHeaders(requestId);
-            //var response = await CreateRequestAsync(url, NumberHelper.DecimalToInteger(amount), Method.PUT, headers);
-
-            ////Se tiver errado será levantado uma exceção
-            //await CheckResponseAsync(response);
-
-            //return true;
         }
 
         /// <summary>
@@ -346,16 +336,6 @@ namespace Cielo
         public async Task<bool> ChangeDayRecurrentAsync(Guid requestId, Guid recurrentPaymentId, int day)
         {
             return await ManagerRecurrent(requestId, recurrentPaymentId, day, "RecurrencyDay");
-
-            //var url = Environment.GetTransactionUrl($"/1/RecurrentPayment/{recurrentPaymentId}/RecurrencyDay");
-
-            //var headers = GetHeaders(requestId);
-            //var response = await CreateRequestAsync(url, day, Method.PUT, headers);
-
-            ////Se tiver errado será levantado uma exceção
-            //await CheckResponseAsync(response);
-
-            //return true;
         }
 
         /// <summary>
@@ -368,16 +348,6 @@ namespace Cielo
         public async Task<bool> ChangeNextPaymentDateRecurrentAsync(Guid requestId, Guid recurrentPaymentId, DateTime nextPayment)
         {
             return await ManagerRecurrent(requestId, recurrentPaymentId, nextPayment, "NextPaymentDate");
-
-            //var url = Environment.GetTransactionUrl($"/1/RecurrentPayment/{recurrentPaymentId}/NextPaymentDate");
-
-            //var headers = GetHeaders(requestId);
-            //var response = await CreateRequestAsync(url, nextPayment, Method.PUT, headers);
-
-            ////Se tiver errado será levantado uma exceção
-            //await CheckResponseAsync(response);
-
-            //return true;
         }
 
         /// <summary>
@@ -391,16 +361,6 @@ namespace Cielo
         public async Task<bool> ChangePaymentRecurrentAsync(Guid requestId, Guid recurrentPaymentId, Payment payment)
         {
             return await ManagerRecurrent(requestId, recurrentPaymentId, payment, "Payment");
-
-            //var url = Environment.GetTransactionUrl($"/1/RecurrentPayment/{recurrentPaymentId}/Payment");
-
-            //var headers = GetHeaders(requestId);
-            //var response = await CreateRequestAsync(url, payment, Method.PUT, headers);
-
-            ////Se tiver errado será levantado uma exceção
-            //await CheckResponseAsync(response);
-
-            //return true;
         }
 
         /// <summary>
@@ -413,16 +373,6 @@ namespace Cielo
         public async Task<bool> ChangeCustomerRecurrentAsync(Guid requestId, Guid recurrentPaymentId, Customer customer)
         {
             return await ManagerRecurrent(requestId, recurrentPaymentId, customer, "Customer");
-
-            //var url = Environment.GetTransactionUrl($"/1/RecurrentPayment/{recurrentPaymentId}/Customer");
-
-            //var headers = GetHeaders(requestId);
-            //var response = await CreateRequestAsync(url, customer, Method.PUT, headers);
-
-            ////Se tiver errado será levantado uma exceção
-            //await CheckResponseAsync(response);
-
-            //return true;
         }
 
         /// <summary>
@@ -435,16 +385,6 @@ namespace Cielo
         public async Task<bool> ChangeEndDateRecurrentAsync(Guid requestId, Guid recurrentPaymentId, DateTime endDate)
         {
             return await ManagerRecurrent(requestId, recurrentPaymentId, endDate, "EndDate");
-
-            //var url = Environment.GetTransactionUrl($"/1/RecurrentPayment/{recurrentPaymentId}/EndDate");
-
-            //var headers = GetHeaders(requestId);
-            //var response = await CreateRequestAsync(url, endDate, Method.PUT, headers);
-
-            ////Se tiver errado será levantado uma exceção
-            //await CheckResponseAsync(response);
-
-            //return true;
         }
 
         /// <summary>
@@ -457,16 +397,6 @@ namespace Cielo
         public async Task<bool> ChangeIntervalRecurrentAsync(Guid requestId, Guid recurrentPaymentId, Interval interval)
         {
             return await ManagerRecurrent(requestId, recurrentPaymentId, interval, "Interval");
-
-            //var url = Environment.GetTransactionUrl($"/1/RecurrentPayment/{recurrentPaymentId}/Interval");
-
-            //var headers = GetHeaders(requestId);
-            //var response = await CreateRequestAsync(url, interval, Method.PUT, headers);
-
-            ////Se tiver errado será levantado uma exceção
-            //await CheckResponseAsync(response);
-
-            //return true;
         }
 
         /// <summary>
