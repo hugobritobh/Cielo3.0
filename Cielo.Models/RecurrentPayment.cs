@@ -69,6 +69,7 @@ namespace Cielo
         }
 
         public List<Link> Links { get; set; }
+
         public string ReasonCode { get; set; }
 
         public string ReasonMessage { get; set; }
@@ -78,6 +79,28 @@ namespace Cielo
         public List<RecurrentTransactions> RecurrentTransactions { get; set; }
 
         public string Status { get; set; }
+
+        #region " MODIFICADO "
+
+        public int? Amount { get; set; }
+
+        public string Country { get; set; }
+
+        public DateTime? CreateDate { get; set; }
+
+        public string Currency { get; set; }
+
+        public int? CurrentRecurrencyTry { get; set; }
+
+        public string OrderNumber { get; set; }
+
+        public string Provider { get; set; }
+
+        public int? RecurrencyDay { get; set; }
+
+        public string IssuerTransactionId { get; set; }
+
+        #endregion
 
         public Status GetStatus()
         {

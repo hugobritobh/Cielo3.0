@@ -963,5 +963,28 @@ namespace Cielo.Tests
             Assert.IsTrue(result.ReasonMessage == "Successful");
             Assert.IsTrue(result.Payments.Count == 1 && result.Payments[0] != null);
         }
+
+        [TestMethod()]
+        public string ModificarDadosPagamentoRecorrencia()
+        {
+            var creditCard = new Card(
+                cardNumber: SandboxCreditCard.Authorized1,
+                holder: _nomeCartao,
+                expirationDate: _validDate,
+                securityCode: "123",
+                brand: CardBrand.Visa,
+                saveCard: false);
+
+            var payment = new Payment(
+                amount: 70M, //  150.02M,
+                currency: Currency.BRL,
+                installments: 1,
+                softDescriptor: _descricao,
+                card: creditCard,
+                recurrentPayment: null);
+
+            var result = _api.ChangePaymentRecurrent(Guid.NewGuid(), new Guid("0e94360f-5883-4986-be50-ace0530c229c"), payment);
+            Assert.IsTrue(result);
+        }
     }
 }
